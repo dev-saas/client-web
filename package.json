@@ -1,0 +1,57 @@
+{
+  "name": "@dev-saas/client-web",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "nyc --reporter=lcov cucumber-js",
+    "eject": "react-scripts eject",
+    "build_testing": "env-cmd .env.test npm run build"
+  },
+  "dependencies": {
+    "apollo-cache-inmemory": "^1.5.1",
+    "apollo-client": "^2.5.1",
+    "apollo-link-context": "^1.0.15",
+    "apollo-link-http": "^1.5.12",
+    "apollo-link-ws": "^1.0.15",
+    "chart.js": "^1.1.1",
+    "formik": "^1.5.1",
+    "graphql": "^14.1.1",
+    "graphql-tag": "^2.10.1",
+    "i18next": "^15.0.9",
+    "i18next-browser-languagedetector": "^3.0.1",
+    "react": "^16.8.3",
+    "react-apollo": "^2.5.2",
+    "react-chartjs": "^1.2.0",
+    "react-dom": "^16.8.3",
+    "react-ga": "^2.5.7",
+    "react-google-recaptcha": "^1.0.5",
+    "react-i18next": "^10.6.1",
+    "react-router-dom": "^4.3.1",
+    "react-scripts": "2.1.2",
+    "rollbar": "^2.5.5",
+    "subscriptions-transport-ws": "^0.9.16",
+    "yup": "^0.26.10"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ],
+  "devDependencies": {
+    "@dev-saas/api": "^1.0.1",
+    "chromedriver": "^2.46.0",
+    "cucumber": "^5.1.0",
+    "dotenv": "^7.0.0",
+    "env-cmd": "^8.0.2",
+    "finalhandler": "^1.1.1",
+    "nyc": "^14.0.0",
+    "selenium-webdriver": "^4.0.0-alpha.1",
+    "serve-static": "^1.13.2"
+  },
+  "homepage": "."
+}
