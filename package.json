@@ -4,7 +4,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "nyc --reporter=lcov cucumber-js",
+    "test": "nyc cucumber-js",
     "eject": "react-scripts eject",
     "build_testing": "env-cmd .env.test npm run build"
   },
@@ -53,5 +53,16 @@
     "selenium-webdriver": "^4.0.0-alpha.1",
     "serve-static": "^1.13.2"
   },
-  "homepage": "."
+  "homepage": ".",
+  "nyc": {
+    "reporter": [
+      "lcov"
+    ],
+    "include": [
+      "src"
+    ],
+    "sourceMap": false,
+    "instrument": true,
+    "all": true
+  }
 }
