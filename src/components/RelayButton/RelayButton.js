@@ -7,15 +7,33 @@ const RelayButton = ({ pino }) => {
   const { sendError } = useContext(NotificationContext);
   const [isOn, setIsOn] = useState();
 
-  let relaySubscription = subscribe({
+  let turnedOnSubscription = subscribe({
     subscription: `
       subscription {
-        isOn: relay${pino}
+        turnedOn
       }
     `,
     callback: {
       next({ data }) {
-        setIsOn(data.isOn);
+        const relay = data.turnedOn;
+        if (relay === pino) setIsOn(true);
+      },
+      error(value) {
+        sendError(value);
+      }
+    }
+  });
+
+  let turnedOffSubscription = subscribe({
+    subscription: `
+      subscription {
+        turnedOff
+      }
+    `,
+    callback: {
+      next({ data }) {
+        const relay = data.turnedOff;
+        if (relay === pino) setIsOn(false);
       },
       error(value) {
         sendError(value);
@@ -26,13 +44,13 @@ const RelayButton = ({ pino }) => {
   useEffect(() => {
     pino = +pino;
     return () => {
-      relaySubscription.unsubscribe();
+      turnedOnSubscription.unsubscribe();
+      turnedOffSubscription.unsubscribe();
     };
   }, []);
 
   const handleClick = () => {
     let pinoInt = +pino;
-    setIsOn(!isOn);
 
     let mutationOn = `mutation ($pino: Int!) {
         turnOn(relay: $pino)
