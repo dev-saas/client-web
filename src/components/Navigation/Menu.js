@@ -1,7 +1,8 @@
 import React, { useContext } from 'react';
 import { NavLink } from 'react-router-dom';
-import AuthContext from '../../context/auth-context';
+import { AuthContext } from '../../context';
 import { useTranslation } from 'react-i18next';
+import { Temperature } from '../index';
 
 const Menu = ({ close }) => {
   const { token, logout } = useContext(AuthContext);
@@ -24,6 +25,7 @@ const Menu = ({ close }) => {
       <LanguageButton language="pt-BR">pt</LanguageButton>
       <LanguageButton language="es-ES">es</LanguageButton>
 
+      {token && <Temperature />}
       {!token && (
         <LiNavLink to="/auth">{t('navigation:Authenticate')}</LiNavLink>
       )}

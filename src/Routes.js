@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { AuthContext } from './context';
 import { Route, Redirect, Switch } from 'react-router-dom';
 
-import { AuthPage, BookingsPage, EventsPage } from './pages';
+import { AuthPage, BookingsPage, EventsPage, RoomPage } from './pages';
 
 const Routes = props => {
   const { token } = useContext(AuthContext);
@@ -13,6 +13,7 @@ const Routes = props => {
       {!token && <Route path="/auth" component={AuthPage} />}
       <Route path="/events" component={EventsPage} />
       {token && <Route path="/bookings" component={BookingsPage} />}
+      {token && <Route path="/bat" component={RoomPage} />}
       {!token && <Redirect to="/auth" exact />}
     </Switch>
   );

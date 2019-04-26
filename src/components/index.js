@@ -6,3 +6,5 @@ export { default as Fragment } from './Fragment';
 export { default as Error } from './Error/Error';
 export { default as Notification } from './Notification/Notification';
 export { default as Backdrop } from './Backdrop/Backdrop';
+export { default as Temperature } from './Temperature/Temperature';
+export { default as RelayButton } from './RelayButton/RelayButton';

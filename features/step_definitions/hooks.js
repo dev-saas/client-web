@@ -11,6 +11,7 @@ if (process.env.NODE_ENV !== 'travis') {
 
 const app = require('@dev-saas/api/src/app');
 const { connection } = require('@dev-saas/api/src/database');
+const mqtt = require('@dev-saas/api/src/mqtt');
 const User = require('@dev-saas/api/src/models/user');
 const pubsub = require('@dev-saas/api/src/pubsub');
 let server;
@@ -44,5 +45,6 @@ AfterAll(async function() {
   await pubsub.close();
   await connection.close();
   await frontend.close();
+  await mqtt.end();
   return server.close();
 });
