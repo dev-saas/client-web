@@ -32,6 +32,7 @@ const RelayButton = ({ pino }) => {
 
   const handleClick = () => {
     let pinoInt = +pino;
+    setIsOn(!isOn);
 
     let mutationOn = `mutation ($pino: Int!) {
         turnOn(relay: $pino)
