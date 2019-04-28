@@ -23,7 +23,7 @@ const GraphQLProvider = ({ children, history, client }) => {
       sendError('Token expired, please do login again');
       history.push('/auth');
     }
-    throw err;
+    sendError(err.message);
   };
 
   const query = async options => {
