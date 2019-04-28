@@ -59,6 +59,7 @@ const Room = props => {
     <BatProvider>
       <RelayButton pino="1" active={relay1IsOn} />
       <RelayButton pino="2" active={relay2IsOn} />
+      <br />
       <Temperature />
       <br />
       <Luminosity />

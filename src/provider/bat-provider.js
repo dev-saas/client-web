@@ -2,6 +2,9 @@ import React, { useContext, useState, useEffect } from 'react';
 
 import { GraphQLContext, BatContext, NotificationContext } from '../context';
 
+const normalize = (val, max, min) =>
+  parseFloat((val - min) / (max - min).toFixed(1));
+
 const BatProvider = props => {
   const [temperature, setTemperature] = useState();
   const [humidity, setHumidity] = useState();
@@ -24,7 +27,7 @@ const BatProvider = props => {
         const { newValue } = data;
         switch (newValue.name) {
           case 'luminosidade':
-            setLight(newValue.value);
+            setLight(normalize(newValue.value, 800, 1024).toFixed(1));
             break;
           case 'umidade':
             setHumidity(newValue.value);
