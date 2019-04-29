@@ -9,3 +9,4 @@ export { default as Backdrop } from './Backdrop/Backdrop';
 export { default as Temperature } from './Temperature/Temperature';
 export { default as Luminosity } from './Luminosity/Luminosity';
 export { default as RelayButton } from './RelayButton/RelayButton';
+export { default as Moisture } from './Moisture/Moisture';

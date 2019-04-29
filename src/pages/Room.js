@@ -1,5 +1,5 @@
 import React, { useEffect, useContext, useState } from 'react';
-import { RelayButton, Temperature, Luminosity } from '../components';
+import { RelayButton, Temperature, Luminosity, Moisture } from '../components';
 import { GraphQLContext, NotificationContext } from '../context';
 import { BatProvider } from '../provider';
 
@@ -57,12 +57,14 @@ const Room = props => {
 
   return (
     <BatProvider>
-      <RelayButton pino="1" active={relay1IsOn} />
-      <RelayButton pino="2" active={relay2IsOn} />
+      <RelayButton pino={1} active={relay1IsOn} />
+      <RelayButton pino={2} active={relay2IsOn} />
       <br />
       <Temperature />
       <br />
       <Luminosity />
+      <br />
+      <Moisture />
     </BatProvider>
   );
 };

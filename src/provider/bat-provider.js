@@ -2,13 +2,11 @@ import React, { useContext, useState, useEffect } from 'react';
 
 import { GraphQLContext, BatContext, NotificationContext } from '../context';
 
-const normalize = (val, max, min) =>
-  parseFloat((val - min) / (max - min).toFixed(1));
-
 const BatProvider = props => {
   const [temperature, setTemperature] = useState();
   const [humidity, setHumidity] = useState();
   const [light, setLight] = useState();
+  const [moisture, setMoisture] = useState();
 
   const { subscribe } = useContext(GraphQLContext);
   const { sendError } = useContext(NotificationContext);
@@ -27,13 +25,16 @@ const BatProvider = props => {
         const { newValue } = data;
         switch (newValue.name) {
           case 'luminosidade':
-            setLight(normalize(newValue.value, 800, 1024).toFixed(1));
+            setLight(newValue.value);
             break;
           case 'umidade':
             setHumidity(newValue.value);
             break;
           case 'temperatura':
             setTemperature(newValue.value);
+            break;
+          case 'moisture':
+            setMoisture(newValue.value);
             break;
           default:
             break;
@@ -52,7 +53,7 @@ const BatProvider = props => {
   }, []);
 
   return (
-    <BatContext.Provider value={{ temperature, humidity, light }}>
+    <BatContext.Provider value={{ temperature, humidity, light, moisture }}>
       {props.children}
     </BatContext.Provider>
   );
