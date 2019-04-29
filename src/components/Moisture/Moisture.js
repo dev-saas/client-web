@@ -6,6 +6,7 @@ const Temperature = props => {
   const { moisture } = useContext(BatContext);
   return (
     <React.Fragment>
+      Soil Moisture
       <Thermometer
         theme="light"
         value={moisture}

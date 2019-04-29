@@ -6,11 +6,12 @@ const Temperature = props => {
   const { light } = useContext(BatContext);
   return (
     <React.Fragment>
+      Light
       <Thermometer
-        theme={light > 0.5 ? 'light' : 'dark'}
+        theme="light"
         value={light}
         max="1"
-        steps="0.1"
+        steps="10"
         size="medium"
         height="400"
       />

@@ -7,21 +7,23 @@ const Temperature = props => {
 
   return (
     <React.Fragment>
+      Temperature
       <Thermometer
         theme="light"
         value={temperature}
-        max="45"
-        steps="1"
+        max="50"
+        steps="5"
         format="°C"
         size="large"
         height="200"
       />
       <br />
+      Humidity
       <Thermometer
         theme="light"
         value={humidity}
         max="100"
-        steps="1"
+        steps="10"
         format="%"
         size="large"
         height="200"
