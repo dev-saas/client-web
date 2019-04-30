@@ -1,10 +1,13 @@
 import React, { useContext } from 'react';
-import { GraphQLContext, NotificationContext } from '../../context';
+import { GraphQLContext, NotificationContext, BatContext } from '../../context';
 import './RelayButton.css';
 
-const RelayButton = ({ pino, active }) => {
+const RelayButton = ({ pino }) => {
   const { mutate } = useContext(GraphQLContext);
   const { sendError } = useContext(NotificationContext);
+
+  const { relay1, relay2 } = useContext(BatContext);
+  const active = pino === 1 ? relay1 : relay2;
 
   const handleClick = async () => {
     let pinoInt = +pino;

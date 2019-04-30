@@ -44,7 +44,7 @@
     "not op_mini all"
   ],
   "devDependencies": {
-    "@dev-saas/api": "^1.0.5",
+    "@dev-saas/api": "^1.0.6",
     "chromedriver": "^2.46.0",
     "cucumber": "^5.1.0",
     "dotenv": "^7.0.0",
