@@ -1,4 +1,5 @@
 module.exports = {
+  plugins: ['react'],
   extends: ['standard', 'plugin:react/recommended'],
   rules: {
     'react/prop-types': 0
@@ -10,6 +11,11 @@ module.exports = {
   parserOptions: {
     ecmaFeatures: {
       jsx: true
+    }
+  },
+  settings: {
+    react: {
+      version: require('./package.json').dependencies.react
     }
   }
 }
