@@ -1,6 +1,6 @@
-import React from 'react';
-import Rollbar from 'rollbar';
-import { RollbarContext } from '../context';
+import React from 'react'
+import Rollbar from 'rollbar'
+import { RollbarContext } from '../context'
 
 const AuthProvider = props => {
   const rollbar = new Rollbar({
@@ -11,27 +11,27 @@ const AuthProvider = props => {
       environment: process.env.NODE_ENV
     },
     enabled: process.env.NODE_ENV === 'production'
-  });
+  })
 
   const logDebug = debug => {
-    rollbar.debug(debug);
-  };
+    rollbar.debug(debug)
+  }
 
   const logInfo = info => {
-    rollbar.info(info);
-  };
+    rollbar.info(info)
+  }
 
   const logWarning = warning => {
-    rollbar.warning(warning);
-  };
+    rollbar.warning(warning)
+  }
 
   const logError = error => {
-    rollbar.error(error);
-  };
+    rollbar.error(error)
+  }
 
   const logCritical = critical => {
-    rollbar.critical(critical);
-  };
+    rollbar.critical(critical)
+  }
 
   return (
     <RollbarContext.Provider
@@ -45,7 +45,7 @@ const AuthProvider = props => {
     >
       {props.children}
     </RollbarContext.Provider>
-  );
-};
+  )
+}
 
-export default AuthProvider;
+export default AuthProvider

@@ -1,5 +1,5 @@
-import React from 'react';
-import './Error.css';
+import React from 'react'
+import './Error.css'
 const Error = ({ message }) => (
   <React.Fragment>
     {message && (
@@ -8,6 +8,6 @@ const Error = ({ message }) => (
       </div>
     )}
   </React.Fragment>
-);
+)
 
-export default Error;
+export default Error

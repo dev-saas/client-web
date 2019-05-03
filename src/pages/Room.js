@@ -1,6 +1,6 @@
-import React from 'react';
-import { RelayButton, Temperature, Luminosity, Moisture } from '../components';
-import { BatProvider } from '../provider';
+import React from 'react'
+import { RelayButton, Temperature, Luminosity, Moisture } from '../components'
+import { BatProvider } from '../provider'
 
 const Room = props => {
   return (
@@ -14,7 +14,7 @@ const Room = props => {
       <br />
       <Moisture />
     </BatProvider>
-  );
-};
+  )
+}
 
-export default Room;
+export default Room

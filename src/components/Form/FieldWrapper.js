@@ -1,5 +1,5 @@
-import React from 'react';
-import './FieldWrapper.css';
+import React from 'react'
+import './FieldWrapper.css'
 
 const FieldWrapper = ({ children, label, formikProps, formikKey }) => (
   <div className="form-control">
@@ -9,6 +9,6 @@ const FieldWrapper = ({ children, label, formikProps, formikKey }) => (
       <div className="input-feedback">{formikProps.errors[formikKey]}</div>
     )}
   </div>
-);
+)
 
-export default FieldWrapper;
+export default FieldWrapper

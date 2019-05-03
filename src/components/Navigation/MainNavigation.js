@@ -1,19 +1,19 @@
-import React, { useState } from 'react';
-import Menu from './Menu';
-import SideDrawer from './SideDrawer/SideDrawer';
-import './MainNavigation.css';
-import DrawerToggleButton from './SideDrawer/DrawerToggleButton';
+import React, { useState } from 'react'
+import Menu from './Menu'
+import SideDrawer from './SideDrawer/SideDrawer'
+import './MainNavigation.css'
+import DrawerToggleButton from './SideDrawer/DrawerToggleButton'
 
 const mainNavigation = props => {
-  const [sideDrawerOpen, setSideDrawerOpen] = useState(false);
+  const [sideDrawerOpen, setSideDrawerOpen] = useState(false)
 
   const backdropClickHandler = () => {
-    setSideDrawerOpen(false);
-  };
+    setSideDrawerOpen(false)
+  }
 
   const drawerToggleClickHandler = () => {
-    setSideDrawerOpen(!sideDrawerOpen);
-  };
+    setSideDrawerOpen(!sideDrawerOpen)
+  }
 
   return (
     <React.Fragment>
@@ -30,7 +30,7 @@ const mainNavigation = props => {
       </header>
       <SideDrawer backdropClick={backdropClickHandler} show={sideDrawerOpen} />
     </React.Fragment>
-  );
-};
+  )
+}
 
-export default mainNavigation;
+export default mainNavigation

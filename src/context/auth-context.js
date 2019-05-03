@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'
 
 export default React.createContext({
   token: null,
@@ -7,4 +7,4 @@ export default React.createContext({
   setRecaptcha: recaptcha => {},
   login: (token, userId, tokenExpiration) => {},
   logout: () => {}
-});
+})

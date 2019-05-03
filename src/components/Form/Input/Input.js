@@ -1,6 +1,6 @@
-import React from 'react';
-import './Input.css';
-import FieldWrapper from '../FieldWrapper';
+import React from 'react'
+import './Input.css'
+import FieldWrapper from '../FieldWrapper'
 
 const Input = ({ label, formikProps, formikKey, ...rest }) => {
   return (
@@ -17,7 +17,7 @@ const Input = ({ label, formikProps, formikKey, ...rest }) => {
         {...rest}
       />
     </FieldWrapper>
-  );
-};
+  )
+}
 
-export default Input;
+export default Input

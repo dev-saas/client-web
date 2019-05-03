@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'
 
 export default React.createContext({
   temperature: null,
@@ -7,4 +7,4 @@ export default React.createContext({
   moisture: null,
   relay1: null,
   relay2: null
-});
+})

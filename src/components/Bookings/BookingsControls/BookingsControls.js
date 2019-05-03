@@ -1,6 +1,6 @@
-import React from 'react';
+import React from 'react'
 
-import './BookingsControls.css';
+import './BookingsControls.css'
 
 const bookingsControl = props => {
   return (
@@ -18,7 +18,7 @@ const bookingsControl = props => {
         Chart
       </button>
     </div>
-  );
-};
+  )
+}
 
-export default bookingsControl;
+export default bookingsControl

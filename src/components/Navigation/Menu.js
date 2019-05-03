@@ -1,22 +1,22 @@
-import React, { useContext } from 'react';
-import { NavLink } from 'react-router-dom';
-import { AuthContext } from '../../context';
-import { useTranslation } from 'react-i18next';
+import React, { useContext } from 'react'
+import { NavLink } from 'react-router-dom'
+import { AuthContext } from '../../context'
+import { useTranslation } from 'react-i18next'
 
 const Menu = ({ close }) => {
-  const { token, logout } = useContext(AuthContext);
-  const { t, i18n } = useTranslation();
+  const { token, logout } = useContext(AuthContext)
+  const { t, i18n } = useTranslation()
 
   const LiNavLink = ({ children, to }) => (
     <li onClick={close}>
       <NavLink to={to}>{children}</NavLink>
     </li>
-  );
+  )
 
   const LanguageButton = ({ language, children }) =>
     i18n.language !== language && (
       <button onClick={() => i18n.changeLanguage(language)}>{children}</button>
-    );
+    )
 
   return (
     <ul>
@@ -39,7 +39,7 @@ const Menu = ({ close }) => {
         </React.Fragment>
       )}
     </ul>
-  );
-};
+  )
+}
 
-export default Menu;
+export default Menu

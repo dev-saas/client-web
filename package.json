@@ -6,7 +6,8 @@
     "build": "react-scripts build",
     "test": "nyc cucumber-js",
     "eject": "react-scripts eject",
-    "build_testing": "env-cmd .env.test npm run build"
+    "build_testing": "env-cmd .env.test npm run build",
+    "lint": "eslint ."
   },
   "dependencies": {
     "apollo-cache-inmemory": "^1.5.1",
@@ -44,11 +45,18 @@
     "not op_mini all"
   ],
   "devDependencies": {
-    "@dev-saas/api": "^1.0.6",
+    "@dev-saas/api": "^1.0.7",
     "chromedriver": "^2.46.0",
     "cucumber": "^5.1.0",
     "dotenv": "^7.0.0",
     "env-cmd": "^8.0.2",
+    "eslint": "^5.16.0",
+    "eslint-config-standard": "^12.0.0",
+    "eslint-plugin-import": "^2.17.2",
+    "eslint-plugin-node": "^8.0.1",
+    "eslint-plugin-promise": "^4.1.1",
+    "eslint-plugin-react": "^7.12.4",
+    "eslint-plugin-standard": "^4.0.0",
     "finalhandler": "^1.1.1",
     "nyc": "^14.0.0",
     "selenium-webdriver": "^4.0.0-alpha.1",

@@ -1,5 +1,5 @@
-import React from 'react';
-import { Error } from '../..';
+import React from 'react'
+import { Error } from '../..'
 
 const modal = ({ onConfirm, onCancel, cancelText, confirmText, error }) => (
   <React.Fragment>
@@ -25,6 +25,6 @@ const modal = ({ onConfirm, onCancel, cancelText, confirmText, error }) => (
       </section>
     )}
   </React.Fragment>
-);
+)
 
-export default modal;
+export default modal

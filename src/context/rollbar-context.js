@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'
 
 export default React.createContext({
   logDebug: message => {},
@@ -6,4 +6,4 @@ export default React.createContext({
   logWarning: message => {},
   logError: message => {},
   logCritical: message => {}
-});
+})

@@ -1,7 +1,7 @@
-import React from 'react';
-import './SideDrawer.css';
-import { Backdrop } from '../../';
-import Menu from '../Menu';
+import React from 'react'
+import './SideDrawer.css'
+import { Backdrop } from '../../'
+import Menu from '../Menu'
 
 const sideDrawer = ({ backdropClick, show }) => (
   <React.Fragment>
@@ -10,5 +10,5 @@ const sideDrawer = ({ backdropClick, show }) => (
       <Menu close={backdropClick} />
     </nav>
   </React.Fragment>
-);
-export default sideDrawer;
+)
+export default sideDrawer

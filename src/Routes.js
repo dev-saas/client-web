@@ -1,11 +1,11 @@
-import React, { useContext } from 'react';
-import { AuthContext } from './context';
-import { Route, Redirect, Switch } from 'react-router-dom';
+import React, { useContext } from 'react'
+import { AuthContext } from './context'
+import { Route, Redirect, Switch } from 'react-router-dom'
 
-import { AuthPage, BookingsPage, EventsPage, RoomPage } from './pages';
+import { AuthPage, BookingsPage, EventsPage, RoomPage } from './pages'
 
 const Routes = props => {
-  const { token } = useContext(AuthContext);
+  const { token } = useContext(AuthContext)
   return (
     <Switch>
       {token && <Redirect from="/" to="/events" exact />}
@@ -16,7 +16,7 @@ const Routes = props => {
       {token && <Route path="/bat" component={RoomPage} />}
       {!token && <Redirect to="/auth" exact />}
     </Switch>
-  );
-};
+  )
+}
 
-export default Routes;
+export default Routes

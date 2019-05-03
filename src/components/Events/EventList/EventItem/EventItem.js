@@ -1,11 +1,11 @@
-import React, { useContext } from 'react';
+import React, { useContext } from 'react'
 
-import './EventItem.css';
+import './EventItem.css'
 
-import { AuthContext } from '../../../../context';
+import { AuthContext } from '../../../../context'
 
 const eventItem = ({ event, onEdit, onDetail }) => {
-  const { userId } = useContext(AuthContext);
+  const { userId } = useContext(AuthContext)
   return (
     <li className="events__list-item">
       <div>
@@ -26,7 +26,7 @@ const eventItem = ({ event, onEdit, onDetail }) => {
         )}
       </div>
     </li>
-  );
-};
+  )
+}
 
-export default eventItem;
+export default eventItem

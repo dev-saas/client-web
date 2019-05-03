@@ -1,9 +1,9 @@
-import React, { useContext } from 'react';
-import './Notification.css';
-import { NotificationContext } from '../../context';
+import React, { useContext } from 'react'
+import './Notification.css'
+import { NotificationContext } from '../../context'
 
 const Notification = props => {
-  const { notifications, warnings, errors } = useContext(NotificationContext);
+  const { notifications, warnings, errors } = useContext(NotificationContext)
   return (
     <div className="wrapper">
       {errors.map((message, index) => (
@@ -22,7 +22,7 @@ const Notification = props => {
         </div>
       ))}
     </div>
-  );
-};
+  )
+}
 
-export default Notification;
+export default Notification

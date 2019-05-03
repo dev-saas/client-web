@@ -1,32 +1,32 @@
-import React, { useState, useContext, useRef } from 'react';
-import './Auth.css';
-import { AuthContext, GraphQLContext, NotificationContext } from '../context';
-import { Formik } from 'formik';
-import { object, string } from 'yup';
-import { Input, Form } from '../components/Form';
-import { Error } from '../components';
-import ReCAPTCHA from 'react-google-recaptcha';
-import { useTranslation } from 'react-i18next';
+import React, { useState, useContext, useRef } from 'react'
+import './Auth.css'
+import { AuthContext, GraphQLContext, NotificationContext } from '../context'
+import { Formik } from 'formik'
+import { object, string } from 'yup'
+import { Input, Form } from '../components/Form'
+import { Error } from '../components'
+import ReCAPTCHA from 'react-google-recaptcha'
+import { useTranslation } from 'react-i18next'
 
 const AuthPage = props => {
-  const [isLogin, setIsLogin] = useState(true);
-  const [error, setError] = useState();
-  const { t } = useTranslation();
+  const [isLogin, setIsLogin] = useState(true)
+  const [error, setError] = useState()
+  const { t } = useTranslation()
 
-  const { login, setRecaptcha, recaptcha } = useContext(AuthContext);
-  const { query, mutate } = useContext(GraphQLContext);
-  const { sendNotification } = useContext(NotificationContext);
-  const recaptchaRef = useRef();
+  const { login, setRecaptcha, recaptcha } = useContext(AuthContext)
+  const { query, mutate } = useContext(GraphQLContext)
+  const { sendNotification } = useContext(NotificationContext)
+  const recaptchaRef = useRef()
 
   const switchModeHandler = () => {
-    setIsLogin(!isLogin);
-    setError();
-    recaptchaRef.current.reset();
-    setRecaptcha();
-  };
+    setIsLogin(!isLogin)
+    setError()
+    recaptchaRef.current.reset()
+    setRecaptcha()
+  }
 
   const submitHandler = async (values, { setSubmitting }) => {
-    setError();
+    setError()
     const loginQuery = `
       query ($email: Email!, $password: String!) {
         login(email: $email, password: $password) {
@@ -35,7 +35,7 @@ const AuthPage = props => {
           tokenExpiration
         }
       }
-    `;
+    `
     const createMutation = `
       mutation ($email: Email!, $password: String!) {
         createUser(email: $email, password: $password) {
@@ -43,34 +43,34 @@ const AuthPage = props => {
           email
         }
       }
-    `;
+    `
 
     try {
       if (isLogin) {
-        const data = await query({ query: loginQuery, variables: values });
-        const { token, userId, tokenExpiration } = data.login;
-        login(token, userId, tokenExpiration);
+        const data = await query({ query: loginQuery, variables: values })
+        const { token, userId, tokenExpiration } = data.login
+        login(token, userId, tokenExpiration)
       } else {
         const data = await mutate({
           mutation: createMutation,
           variables: values
-        });
-        const { email } = data.createUser;
-        sendNotification(email + ' ' + t('auth:registered successfully'));
-        values.password = '';
-        setIsLogin(true);
+        })
+        const { email } = data.createUser
+        sendNotification(email + ' ' + t('auth:registered successfully'))
+        values.password = ''
+        setIsLogin(true)
       }
     } catch (err) {
-      setError(err.message);
+      setError(err.message)
     } finally {
-      setSubmitting(false);
-      setRecaptcha();
+      setSubmitting(false)
+      setRecaptcha()
     }
-  };
+  }
 
   const handleCaptchaResponseChange = token => {
-    setRecaptcha(token);
-  };
+    setRecaptcha(token)
+  }
 
   return (
     <Formik
@@ -90,8 +90,8 @@ const AuthPage = props => {
         confirmPassword: string().test(
           'passwords-match',
           t('auth:Passwords must match'),
-          function(value) {
-            return isLogin || this.parent.password === value;
+          function (value) {
+            return isLogin || this.parent.password === value
           }
         )
       })}
@@ -146,7 +146,7 @@ const AuthPage = props => {
         </Form>
       )}
     </Formik>
-  );
-};
+  )
+}
 
-export default AuthPage;
+export default AuthPage

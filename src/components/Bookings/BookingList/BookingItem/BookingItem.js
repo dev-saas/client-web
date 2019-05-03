@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'
 
 const BookingItem = ({ booking, onDelete }) => (
   <li className="bookings__item">
@@ -11,6 +11,6 @@ const BookingItem = ({ booking, onDelete }) => (
       </button>
     </div>
   </li>
-);
+)
 
-export default BookingItem;
+export default BookingItem

@@ -1,6 +1,6 @@
-import React from 'react';
-import FieldWrapper from '../FieldWrapper';
-import './TextArea.css';
+import React from 'react'
+import FieldWrapper from '../FieldWrapper'
+import './TextArea.css'
 
 const TextArea = ({ label, formikProps, formikKey, ...rest }) => {
   return (
@@ -17,7 +17,7 @@ const TextArea = ({ label, formikProps, formikKey, ...rest }) => {
         {...rest}
       />
     </FieldWrapper>
-  );
-};
+  )
+}
 
-export default TextArea;
+export default TextArea

@@ -1,9 +1,9 @@
-import React, { useContext } from 'react';
-import { BatContext } from '../../context';
-import Thermometer from 'react-thermometer-component';
+import React, { useContext } from 'react'
+import { BatContext } from '../../context'
+import Thermometer from 'react-thermometer-component'
 
 const Temperature = props => {
-  const { temperature, humidity } = useContext(BatContext);
+  const { temperature, humidity } = useContext(BatContext)
 
   return (
     <React.Fragment>
@@ -29,7 +29,7 @@ const Temperature = props => {
         height="200"
       />
     </React.Fragment>
-  );
-};
+  )
+}
 
-export default Temperature;
+export default Temperature

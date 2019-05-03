@@ -1,8 +1,8 @@
-import React from 'react';
+import React from 'react'
 
-import EventItem from './EventItem/EventItem';
-import './EventList.css';
-import Fragment from '../../Fragment';
+import EventItem from './EventItem/EventItem'
+import './EventList.css'
+import Fragment from '../../Fragment'
 
 const eventList = ({ events, isLoading, ...rest }) => {
   return (
@@ -13,7 +13,7 @@ const eventList = ({ events, isLoading, ...rest }) => {
         ))}
       </ul>
     </Fragment>
-  );
-};
+  )
+}
 
-export default eventList;
+export default eventList

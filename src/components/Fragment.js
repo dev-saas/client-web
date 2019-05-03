@@ -1,7 +1,7 @@
-import React from 'react';
-import { Spinner } from './';
+import React from 'react'
+import { Spinner } from './'
 const Fragment = ({ isLoading, children }) => {
-  return <React.Fragment>{isLoading ? <Spinner /> : children}</React.Fragment>;
-};
+  return <React.Fragment>{isLoading ? <Spinner /> : children}</React.Fragment>
+}
 
-export default Fragment;
+export default Fragment

@@ -1,58 +1,58 @@
-import React, { useContext } from 'react';
+import React, { useContext } from 'react'
 import {
   GraphQLContext,
   AuthContext,
   NotificationContext,
   RollbarContext
-} from '../context';
-import { withRouter } from 'react-router-dom';
+} from '../context'
+import { withRouter } from 'react-router-dom'
 
-import { withApollo } from 'react-apollo';
-import gql from 'graphql-tag';
+import { withApollo } from 'react-apollo'
+import gql from 'graphql-tag'
 
 const GraphQLProvider = ({ children, history, client }) => {
-  const { logout } = useContext(AuthContext);
-  const { sendError } = useContext(NotificationContext);
-  const { logError } = useContext(RollbarContext);
+  const { logout } = useContext(AuthContext)
+  const { sendError } = useContext(NotificationContext)
+  const { logError } = useContext(RollbarContext)
 
   const Error = err => {
-    err.message = err.message.substring(err.message.indexOf(':') + 1);
-    logError(err.message);
+    err.message = err.message.substring(err.message.indexOf(':') + 1)
+    logError(err.message)
     if (err.message === 'Unauthenticated') {
-      logout();
-      sendError('Token expired, please do login again');
-      history.push('/auth');
+      logout()
+      sendError('Token expired, please do login again')
+      history.push('/auth')
     }
-    sendError(err.message);
-  };
+    sendError(err.message)
+  }
 
   const query = async options => {
     try {
-      options.query = gql(options.query);
-      const { data } = await client.query(options);
-      return data;
+      options.query = gql(options.query)
+      const { data } = await client.query(options)
+      return data
     } catch (err) {
-      Error(err);
+      Error(err)
     }
-  };
+  }
 
   const mutate = async options => {
     try {
-      options.mutation = gql(options.mutation);
-      const { data } = await client.mutate(options);
-      return data;
+      options.mutation = gql(options.mutation)
+      const { data } = await client.mutate(options)
+      return data
     } catch (err) {
-      Error(err);
+      Error(err)
     }
-  };
+  }
 
   const subscribe = ({ subscription, callback }) => {
     return client
       .subscribe({
         query: gql(subscription)
       })
-      .subscribe(callback);
-  };
+      .subscribe(callback)
+  }
 
   return (
     <GraphQLContext.Provider
@@ -64,7 +64,7 @@ const GraphQLProvider = ({ children, history, client }) => {
     >
       {children}
     </GraphQLContext.Provider>
-  );
-};
+  )
+}
 
-export default withRouter(withApollo(GraphQLProvider));
+export default withRouter(withApollo(GraphQLProvider))

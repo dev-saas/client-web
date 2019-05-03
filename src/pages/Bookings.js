@@ -1,31 +1,31 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useContext, useEffect } from 'react'
 
-import { GraphQLContext, NotificationContext } from '../context';
+import { GraphQLContext, NotificationContext } from '../context'
 import {
   BookingList,
   BookingsChart,
   BookingsControls
-} from '../components/Bookings';
-import { Modal } from '../components';
-import { findInArrayById, removeFromArrayById } from '../helper/array-utils';
+} from '../components/Bookings'
+import { Modal } from '../components'
+import { findInArrayById, removeFromArrayById } from '../helper/array-utils'
 
 const BookingsPage = props => {
-  const [isLoading, setIsLoading] = useState(false);
-  const [isCanceling, setIsCanceling] = useState(false);
-  const [bookings, setBookings] = useState([]);
-  const [outputType, setOutputType] = useState('list');
-  const [selectedBooking, setSelectedBooking] = useState(null);
-  const [error, setError] = useState();
+  const [isLoading, setIsLoading] = useState(false)
+  const [isCanceling, setIsCanceling] = useState(false)
+  const [bookings, setBookings] = useState([])
+  const [outputType, setOutputType] = useState('list')
+  const [selectedBooking, setSelectedBooking] = useState(null)
+  const [error, setError] = useState()
 
-  const { query, mutate } = useContext(GraphQLContext);
-  const { sendNotification, sendError } = useContext(NotificationContext);
+  const { query, mutate } = useContext(GraphQLContext)
+  const { sendNotification, sendError } = useContext(NotificationContext)
 
   useEffect(() => {
-    fetchBookings();
-  }, []);
+    fetchBookings()
+  }, [])
 
   const fetchBookings = async () => {
-    setIsLoading(true);
+    setIsLoading(true)
     const bookingsQuery = `
       query {
         bookings {
@@ -39,29 +39,29 @@ const BookingsPage = props => {
           }
         }
       }
-    `;
+    `
 
     try {
       const { bookings } = await query({
         query: bookingsQuery,
         fetchPolicy: 'no-cache'
-      });
-      setBookings(bookings);
-      setIsLoading(false);
+      })
+      setBookings(bookings)
+      setIsLoading(false)
     } catch (err) {
-      sendError(err.message);
+      sendError(err.message)
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
-  };
+  }
 
   const selectBookingHandler = bookingId => {
-    setError();
-    setSelectedBooking(findInArrayById(bookings, bookingId));
-  };
+    setError()
+    setSelectedBooking(findInArrayById(bookings, bookingId))
+  }
 
   const deleteBookingHandler = async () => {
-    setIsCanceling(true);
+    setIsCanceling(true)
     const cancelBookingMutation = `
       mutation ($id: ID!) {
         event: cancelBooking(bookingId: $id) {
@@ -69,7 +69,7 @@ const BookingsPage = props => {
           title
         }
       }
-    `;
+    `
 
     try {
       const { event } = await mutate({
@@ -77,28 +77,28 @@ const BookingsPage = props => {
         variables: {
           id: selectedBooking._id
         }
-      });
+      })
       const updatedBookings = removeFromArrayById(
         bookings,
         selectedBooking._id
-      );
-      setBookings(updatedBookings);
-      sendNotification(`Booking ${event.title} canceled`);
-      setSelectedBooking(null);
+      )
+      setBookings(updatedBookings)
+      sendNotification(`Booking ${event.title} canceled`)
+      setSelectedBooking(null)
     } catch (err) {
-      setError(err.message);
+      setError(err.message)
     } finally {
-      setIsCanceling(false);
+      setIsCanceling(false)
     }
-  };
+  }
 
   const changeOutputTypeHandler = outputType => {
     if (outputType === 'list') {
-      setOutputType('list');
+      setOutputType('list')
     } else {
-      setOutputType('chart');
+      setOutputType('chart')
     }
-  };
+  }
   return (
     <React.Fragment>
       {selectedBooking && (
@@ -126,7 +126,7 @@ const BookingsPage = props => {
         <BookingsChart bookings={bookings} />
       )}
     </React.Fragment>
-  );
-};
+  )
+}
 
-export default BookingsPage;
+export default BookingsPage

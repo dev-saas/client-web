@@ -1,8 +1,8 @@
-import React from 'react';
-import Backdrop from '../Backdrop/Backdrop';
-import './Modal.css';
-import { Fragment } from '../';
-import { Action } from '../Form';
+import React from 'react'
+import Backdrop from '../Backdrop/Backdrop'
+import './Modal.css'
+import { Fragment } from '../'
+import { Action } from '../Form'
 const modal = ({ title, children, isLoading, ...rest }) => (
   <React.Fragment>
     <Backdrop click={rest.onCancel} />
@@ -16,6 +16,6 @@ const modal = ({ title, children, isLoading, ...rest }) => (
       </Fragment>
     </div>
   </React.Fragment>
-);
+)
 
-export default modal;
+export default modal

@@ -1,38 +1,38 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useContext, useEffect } from 'react'
 
-import { Modal, EventList } from '../components';
-import { AuthContext, GraphQLContext, NotificationContext } from '../context';
-import './Events.css';
-import { Formik } from 'formik';
-import { object, string, number } from 'yup';
-import { Input, TextArea, Action, Form } from '../components/Form';
+import { Modal, EventList } from '../components'
+import { AuthContext, GraphQLContext, NotificationContext } from '../context'
+import './Events.css'
+import { Formik } from 'formik'
+import { object, string, number } from 'yup'
+import { Input, TextArea, Action, Form } from '../components/Form'
 import {
   updateInArray,
   findInArrayById,
   addInArray
-} from '../helper/array-utils';
+} from '../helper/array-utils'
 
 const validationEvent = object().shape({
   title: string().required(),
   price: number().required(),
   description: string().required(),
   date: string().required()
-});
+})
 
 const EventsPage = props => {
-  const [creating, setCreating] = useState(false);
-  const [events, setEvents] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [selectedEvent, setSelectedEvent] = useState(null);
-  const [updating, setUpdating] = useState(null);
-  const [isBooking, setIsBooking] = useState(false);
-  const [error, setError] = useState();
-  const { sendNotification, sendError } = useContext(NotificationContext);
+  const [creating, setCreating] = useState(false)
+  const [events, setEvents] = useState([])
+  const [isLoading, setIsLoading] = useState(false)
+  const [selectedEvent, setSelectedEvent] = useState(null)
+  const [updating, setUpdating] = useState(null)
+  const [isBooking, setIsBooking] = useState(false)
+  const [error, setError] = useState()
+  const { sendNotification, sendError } = useContext(NotificationContext)
 
-  var isActive = true;
+  var isActive = true
 
-  const { token, userId } = useContext(AuthContext);
-  const { query, mutate, subscribe } = useContext(GraphQLContext);
+  const { token, userId } = useContext(AuthContext)
+  const { query, mutate, subscribe } = useContext(GraphQLContext)
 
   let s1 = subscribe({
     subscription: `
@@ -50,16 +50,15 @@ const EventsPage = props => {
       }
     `,
     callback: {
-      next({ data }) {
-        const { newEvent } = data;
-        if (userId !== newEvent.creator._id)
-          setEvents(addInArray(events, newEvent));
+      next ({ data }) {
+        const { newEvent } = data
+        if (userId !== newEvent.creator._id) { setEvents(addInArray(events, newEvent)) }
       },
-      error(value) {
-        sendError(value);
+      error (value) {
+        sendError(value)
       }
     }
-  });
+  })
 
   let s2 = subscribe({
     subscription: `
@@ -74,31 +73,30 @@ const EventsPage = props => {
       }
     `,
     callback: {
-      next({ data }) {
-        const updatedEvent = findInArrayById(events, data.updatedEvent._id);
-        if (!updatedEvent) return;
-        if (updatedEvent && updatedEvent.creator._id !== userId)
-          setEvents(updateInArray(events, data.updatedEvent));
+      next ({ data }) {
+        const updatedEvent = findInArrayById(events, data.updatedEvent._id)
+        if (!updatedEvent) return
+        if (updatedEvent && updatedEvent.creator._id !== userId) { setEvents(updateInArray(events, data.updatedEvent)) }
       },
-      error(value) {
-        sendError(value);
+      error (value) {
+        sendError(value)
       }
     }
-  });
+  })
 
   useEffect(() => {
-    fetchEvents();
+    fetchEvents()
     return () => {
-      isActive = false;
-      s1.unsubscribe();
-      s2.unsubscribe();
-    };
-  }, []);
+      isActive = false
+      s1.unsubscribe()
+      s2.unsubscribe()
+    }
+  }, [])
 
   const startCreateEventHandler = () => {
-    setError();
-    setCreating(true);
-  };
+    setError()
+    setCreating(true)
+  }
 
   const modalConfirmHandler = async (values, { setSubmitting }) => {
     const createEventMutation = `
@@ -114,22 +112,22 @@ const EventsPage = props => {
           }
         }
       }
-    `;
+    `
 
     try {
       const { newEvent } = await mutate({
         mutation: createEventMutation,
         variables: values
-      });
-      setEvents(addInArray(events, newEvent));
-      setCreating(false);
-      sendNotification(`Event ${newEvent.title} created`);
+      })
+      setEvents(addInArray(events, newEvent))
+      setCreating(false)
+      sendNotification(`Event ${newEvent.title} created`)
     } catch (err) {
-      setError(err.message);
+      setError(err.message)
     } finally {
-      setSubmitting(false);
+      setSubmitting(false)
     }
-  };
+  }
 
   const modalConfirmUpdateHandler = async (values, { setSubmitting }) => {
     const updateEventMutation = `
@@ -142,7 +140,7 @@ const EventsPage = props => {
           price
         }
       }
-    `;
+    `
     try {
       const { event } = await mutate({
         mutation: updateEventMutation,
@@ -150,32 +148,32 @@ const EventsPage = props => {
           _id: updating._id,
           ...values
         }
-      });
-      const updatedEvents = updateInArray(events, event);
-      setUpdating(null);
-      setEvents(updatedEvents);
-      sendNotification(`Event ${event.title} updated`);
+      })
+      const updatedEvents = updateInArray(events, event)
+      setUpdating(null)
+      setEvents(updatedEvents)
+      sendNotification(`Event ${event.title} updated`)
     } catch (err) {
-      setError(err.message);
+      setError(err.message)
     } finally {
-      setSubmitting(false);
+      setSubmitting(false)
     }
-  };
+  }
 
   const editHandler = eventId => {
-    setError();
-    setUpdating(findInArrayById(events, eventId));
-  };
+    setError()
+    setUpdating(findInArrayById(events, eventId))
+  }
 
   const modalCancelHandler = () => {
-    setError();
-    setCreating(false);
-    setSelectedEvent(null);
-    setUpdating(null);
-  };
+    setError()
+    setCreating(false)
+    setSelectedEvent(null)
+    setUpdating(null)
+  }
 
   const fetchEvents = async () => {
-    setIsLoading(true);
+    setIsLoading(true)
     const eventsQuery = `
       query {
         events {
@@ -190,33 +188,33 @@ const EventsPage = props => {
           }
         }
       }
-    `;
+    `
 
     try {
       const { events } = await query({
         query: eventsQuery,
         fetchPolicy: 'no-cache'
-      });
+      })
       if (isActive) {
-        setEvents(events);
+        setEvents(events)
       }
     } catch (err) {
-      sendError(err.message);
+      sendError(err.message)
     } finally {
       if (isActive) {
-        setIsLoading(false);
+        setIsLoading(false)
       }
     }
-  };
+  }
 
   const showDetailHandler = eventId => {
-    setError();
-    setSelectedEvent(findInArrayById(events, eventId));
-  };
+    setError()
+    setSelectedEvent(findInArrayById(events, eventId))
+  }
 
   const bookEventHandler = async () => {
-    setIsBooking(true);
-    console.log(selectedEvent);
+    setIsBooking(true)
+    console.log(selectedEvent)
     const bookEventMutation = `
       mutation BookEvent($id: ID!) {
         bookEvent(eventId: $id) {
@@ -225,20 +223,20 @@ const EventsPage = props => {
           updatedAt
         }
       }
-    `;
+    `
     try {
       await mutate({
         mutation: bookEventMutation,
         variables: { id: selectedEvent._id }
-      });
-      sendNotification(`Event ${selectedEvent.title} booked`);
-      setSelectedEvent(null);
+      })
+      sendNotification(`Event ${selectedEvent.title} booked`)
+      setSelectedEvent(null)
     } catch (err) {
-      setError(err.message);
+      setError(err.message)
     } finally {
-      setIsBooking(false);
+      setIsBooking(false)
     }
-  };
+  }
 
   return (
     <React.Fragment>
@@ -371,7 +369,7 @@ const EventsPage = props => {
         isLoading={isLoading}
       />
     </React.Fragment>
-  );
-};
+  )
+}
 
-export default EventsPage;
+export default EventsPage

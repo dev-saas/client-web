@@ -1,8 +1,8 @@
-import React from 'react';
+import React from 'react'
 
-import './BookingList.css';
-import { Fragment } from '../..';
-import BookingItem from './BookingItem/BookingItem';
+import './BookingList.css'
+import { Fragment } from '../..'
+import BookingItem from './BookingItem/BookingItem'
 
 const bookingList = ({ bookings, onDelete, isLoading }) => (
   <Fragment isLoading={isLoading}>
@@ -12,6 +12,6 @@ const bookingList = ({ bookings, onDelete, isLoading }) => (
       ))}
     </ul>
   </Fragment>
-);
+)
 
-export default bookingList;
+export default bookingList
