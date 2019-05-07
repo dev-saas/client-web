@@ -2,7 +2,6 @@ import React, { useState, useContext, useEffect } from 'react'
 
 import { Modal, EventList } from '../components'
 import { AuthContext, GraphQLContext, NotificationContext } from '../context'
-import './Events.css'
 import { Formik } from 'formik'
 import { object, string, number } from 'yup'
 import { Input, TextArea, Action, Form } from '../components/Form'
@@ -11,6 +10,7 @@ import {
   findInArrayById,
   addInArray
 } from '../helper/array-utils'
+import { Button, Card } from 'react-bootstrap'
 
 const validationEvent = object().shape({
   title: string().required(),
@@ -52,7 +52,9 @@ const EventsPage = props => {
     callback: {
       next ({ data }) {
         const { newEvent } = data
-        if (userId !== newEvent.creator._id) { setEvents(addInArray(events, newEvent)) }
+        if (userId !== newEvent.creator._id) {
+          setEvents(addInArray(events, newEvent))
+        }
       },
       error (value) {
         sendError(value)
@@ -76,7 +78,9 @@ const EventsPage = props => {
       next ({ data }) {
         const updatedEvent = findInArrayById(events, data.updatedEvent._id)
         if (!updatedEvent) return
-        if (updatedEvent && updatedEvent.creator._id !== userId) { setEvents(updateInArray(events, data.updatedEvent)) }
+        if (updatedEvent && updatedEvent.creator._id !== userId) {
+          setEvents(updateInArray(events, data.updatedEvent))
+        }
       },
       error (value) {
         sendError(value)
@@ -214,7 +218,6 @@ const EventsPage = props => {
 
   const bookEventHandler = async () => {
     setIsBooking(true)
-    console.log(selectedEvent)
     const bookEventMutation = `
       mutation BookEvent($id: ID!) {
         bookEvent(eventId: $id) {
@@ -240,56 +243,55 @@ const EventsPage = props => {
 
   return (
     <React.Fragment>
-      {creating && (
-        <Modal title="Add Event">
-          <Formik
-            initialValues={{
-              title: '',
-              price: '',
-              date: new Date().toISOString().slice(0, -5),
-              description: ''
-            }}
-            onSubmit={modalConfirmHandler}
-            validationSchema={validationEvent}
-          >
-            {formikProps => (
-              <Form id="createForm" isLoading={formikProps.isSubmitting}>
-                <Input
-                  formikKey="title"
-                  label="Title"
-                  type="text"
-                  formikProps={formikProps}
-                />
-                <Input
-                  formikKey="price"
-                  label="Price"
-                  type="number"
-                  formikProps={formikProps}
-                />
-                <Input
-                  formikKey="date"
-                  label="Date"
-                  type="datetime-local"
-                  formikProps={formikProps}
-                />
-                <TextArea
-                  formikKey="description"
-                  rows="4"
-                  label="Description"
-                  formikProps={formikProps}
-                />
-                <Action
-                  onCancel={modalCancelHandler}
-                  confirmText="Create"
-                  error={error}
-                />
-              </Form>
-            )}
-          </Formik>
-        </Modal>
-      )}
+      <Modal title='Add Event' show={creating}>
+        <Formik
+          initialValues={{
+            title: '',
+            price: '',
+            date: new Date().toISOString().slice(0, -5),
+            description: ''
+          }}
+          onSubmit={modalConfirmHandler}
+          validationSchema={validationEvent}
+        >
+          {formikProps => (
+            <Form id='createForm' isLoading={formikProps.isSubmitting}>
+              <Input
+                formikKey='title'
+                label='Title'
+                type='text'
+                formikProps={formikProps}
+              />
+              <Input
+                formikKey='price'
+                label='Price'
+                type='number'
+                formikProps={formikProps}
+              />
+              <Input
+                formikKey='date'
+                label='Date'
+                type='datetime-local'
+                formikProps={formikProps}
+              />
+              <TextArea
+                formikKey='description'
+                rows='4'
+                label='Description'
+                formikProps={formikProps}
+              />
+              <Action
+                onHide={modalCancelHandler}
+                confirmText='Create'
+                submit
+                error={error}
+              />
+            </Form>
+          )}
+        </Formik>
+      </Modal>
       {updating && (
-        <Modal title="Update Event">
+        <Modal title='Update Event' show={updating}>
           <Formik
             initialValues={{
               title: updating.title,
@@ -301,34 +303,35 @@ const EventsPage = props => {
             validationSchema={validationEvent}
           >
             {formikProps => (
-              <Form id="createForm" isLoading={formikProps.isSubmitting}>
+              <Form id='createForm' isLoading={formikProps.isSubmitting}>
                 <Input
-                  formikKey="title"
-                  label="Title"
-                  type="text"
+                  formikKey='title'
+                  label='Title'
+                  type='text'
                   formikProps={formikProps}
                 />
                 <Input
-                  formikKey="price"
-                  label="Price"
-                  type="number"
+                  formikKey='price'
+                  label='Price'
+                  type='number'
                   formikProps={formikProps}
                 />
                 <Input
-                  formikKey="date"
-                  label="Date"
-                  type="datetime-local"
+                  formikKey='date'
+                  label='Date'
+                  type='datetime-local'
                   formikProps={formikProps}
                 />
                 <TextArea
-                  formikKey="description"
-                  rows="4"
-                  label="Description"
+                  formikKey='description'
+                  rows='4'
+                  label='Description'
                   formikProps={formikProps}
                 />
                 <Action
-                  onCancel={modalCancelHandler}
-                  confirmText="Save"
+                  onHide={modalCancelHandler}
+                  confirmText='Save'
+                  submit
                   error={error}
                 />
               </Form>
@@ -338,8 +341,9 @@ const EventsPage = props => {
       )}
       {selectedEvent && (
         <Modal
+          show={selectedEvent}
           title={selectedEvent.title}
-          onCancel={modalCancelHandler}
+          onHide={modalCancelHandler}
           onConfirm={token && bookEventHandler}
           cancelText={!token && 'Close'}
           confirmText={token && 'Book'}
@@ -355,12 +359,14 @@ const EventsPage = props => {
         </Modal>
       )}
       {token && (
-        <div className="events-control">
-          <p>Share your own Events!</p>
-          <button className="btn" onClick={startCreateEventHandler}>
-            Create Event
-          </button>
-        </div>
+        <Card className='text-center'>
+          <Card.Body>
+            <Card.Title>Share your own Events!</Card.Title>
+            <Button variant='primary' onClick={startCreateEventHandler}>
+              Create Event
+            </Button>
+          </Card.Body>
+        </Card>
       )}
       <EventList
         events={events}

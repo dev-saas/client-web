@@ -1,30 +1,36 @@
 import React from 'react'
 import { Error } from '../..'
 
-const modal = ({ onConfirm, onCancel, cancelText, confirmText, error }) => (
-  <React.Fragment>
+import { Button, Modal } from 'react-bootstrap'
+
+const Action = ({
+  onConfirm,
+  onHide,
+  cancelText,
+  confirmText,
+  error,
+  submit
+}) => (
+  <Modal.Footer>
     <Error message={error} />
-    {(onCancel || onConfirm) && (
-      <section className="modal__actions">
-        {onCancel && (
-          <button type="button" className="btn" onClick={onCancel}>
-            {cancelText || 'Cancel'}
-          </button>
-        )}
-        {onConfirm ? (
-          <button className="btn" onClick={onConfirm}>
-            {confirmText || 'Confirm'}
-          </button>
-        ) : (
-          confirmText && (
-            <button type="submit" className="btn">
-              {confirmText || 'Confirm'}
-            </button>
-          )
-        )}
-      </section>
-    )}
-  </React.Fragment>
+    <React.Fragment>
+      {onHide && (
+        <Button variant='outline-secondary' onClick={onHide}>
+          {cancelText || 'Cancel'}
+        </Button>
+      )}
+      {onConfirm && (
+        <Button variant='primary' onClick={onConfirm}>
+          {confirmText || 'Confirm'}
+        </Button>
+      )}
+      {submit && (
+        <Button variant='primary' type='submit'>
+          {confirmText || 'Confirm'}
+        </Button>
+      )}
+    </React.Fragment>
+  </Modal.Footer>
 )
 
-export default modal
+export default Action

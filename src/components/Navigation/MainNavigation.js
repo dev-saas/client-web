@@ -1,35 +1,49 @@
-import React, { useState } from 'react'
-import Menu from './Menu'
-import SideDrawer from './SideDrawer/SideDrawer'
-import './MainNavigation.css'
-import DrawerToggleButton from './SideDrawer/DrawerToggleButton'
+import React, { useContext } from 'react'
+import { Navbar, Nav, NavDropdown } from 'react-bootstrap'
+import { useTranslation } from 'react-i18next'
+import { AuthContext } from '../../context'
 
 const mainNavigation = props => {
-  const [sideDrawerOpen, setSideDrawerOpen] = useState(false)
+  const { t, i18n } = useTranslation()
+  const { token, logout } = useContext(AuthContext)
 
-  const backdropClickHandler = () => {
-    setSideDrawerOpen(false)
-  }
-
-  const drawerToggleClickHandler = () => {
-    setSideDrawerOpen(!sideDrawerOpen)
-  }
+  const LanguageButton = ({ language, children }) =>
+    i18n.language !== language && (
+      <NavDropdown.Item onClick={() => i18n.changeLanguage(language)}>
+        {children}
+      </NavDropdown.Item>
+    )
 
   return (
-    <React.Fragment>
-      <header className="main-navigation">
-        <div className="main-navigation__toggle-button">
-          <DrawerToggleButton click={drawerToggleClickHandler} />
-        </div>
-        <div className="main-navigation__logo">EasyEvent</div>
-        {!sideDrawerOpen && (
-          <nav className="main-navigation__items">
-            <Menu />
-          </nav>
-        )}
-      </header>
-      <SideDrawer backdropClick={backdropClickHandler} show={sideDrawerOpen} />
-    </React.Fragment>
+    <Navbar collapseOnSelect expand='lg' bg='dark' variant='dark' sticky='top'>
+      <Navbar.Brand>EasyEvent</Navbar.Brand>
+      <Navbar.Toggle />
+      <Navbar.Collapse>
+        <Nav className='mr-auto' />
+        <Nav>
+          <Nav.Link href='#events'>{t('navigation:Events')}</Nav.Link>
+          {token && (
+            <React.Fragment>
+              <Nav.Link href='#bookings'>{t('navigation:Bookings')}</Nav.Link>
+              <Nav.Link href='#bat'>Bat</Nav.Link>
+              <div id='logout'>
+                <Nav.Link id='logout' onClick={logout}>
+                  {t('navigation:Logout')}
+                </Nav.Link>
+              </div>
+            </React.Fragment>
+          )}
+          {!token && (
+            <Nav.Link href='#auth'>{t('navigation:Authenticate')}</Nav.Link>
+          )}
+          <NavDropdown title='Language' id='collasible-nav-dropdown'>
+            <LanguageButton language='en-US'>en</LanguageButton>
+            <LanguageButton language='pt-BR'>pt</LanguageButton>
+            <LanguageButton language='es-ES'>es</LanguageButton>
+          </NavDropdown>
+        </Nav>
+      </Navbar.Collapse>
+    </Navbar>
   )
 }
 

@@ -1,22 +1,25 @@
 import React from 'react'
 
 import './BookingsControls.css'
+import { Button } from 'react-bootstrap'
 
 const bookingsControl = props => {
   return (
-    <div className="bookings-control">
-      <button
-        className={props.activeOutputType === 'list' ? 'active' : ''}
+    <div className='bookings-control'>
+      <Button
+        variant='secondary'
+        className={props.activeOutputType === 'list' && 'active'}
         onClick={props.onChange.bind(this, 'list')}
       >
         List
-      </button>
-      <button
-        className={props.activeOutputType === 'chart' ? 'active' : ''}
+      </Button>
+      <Button
+        variant='secondary'
+        className={props.activeOutputType === 'chart' && 'active'}
         onClick={props.onChange.bind(this, 'chart')}
       >
         Chart
-      </button>
+      </Button>
     </div>
   )
 }

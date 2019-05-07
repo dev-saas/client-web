@@ -54,12 +54,18 @@ const BatProvider = props => {
     }
   })
 
-  useEffect(() => {
-    query({ query: `query { status }`, fetchPolicy: 'no-cache' })
-    return () => {
-      newValueSubscription.unsubscribe()
-    }
-  }, [])
+  useEffect(
+    () => {
+      setTimeout(
+        () => query({ query: `query { status }`, fetchPolicy: 'no-cache' }),
+        2000
+      )
+      return () => {
+        newValueSubscription.unsubscribe()
+      }
+    },
+    [relay1]
+  )
 
   return (
     <BatContext.Provider

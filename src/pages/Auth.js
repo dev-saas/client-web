@@ -1,5 +1,4 @@
 import React, { useState, useContext, useRef } from 'react'
-import './Auth.css'
 import { AuthContext, GraphQLContext, NotificationContext } from '../context'
 import { Formik } from 'formik'
 import { object, string } from 'yup'
@@ -7,6 +6,7 @@ import { Input, Form } from '../components/Form'
 import { Error } from '../components'
 import ReCAPTCHA from 'react-google-recaptcha'
 import { useTranslation } from 'react-i18next'
+import { Button } from 'react-bootstrap'
 
 const AuthPage = props => {
   const [isLogin, setIsLogin] = useState(true)
@@ -97,32 +97,32 @@ const AuthPage = props => {
       })}
     >
       {formikProps => (
-        <Form className="auth-form" isLoading={formikProps.isSubmitting}>
+        <Form isLoading={formikProps.isSubmitting}>
           <Input
-            id="email"
-            formikKey="email"
+            id='email'
+            formikKey='email'
             label={t('auth:Email')}
             formikProps={formikProps}
             placeholder={t('auth:Enter your email')}
-            type="email"
+            type='email'
           />
           <Input
-            id="password"
-            formikKey="password"
+            id='password'
+            formikKey='password'
             label={t('auth:Password')}
             placeholder={t('auth:Password')}
             autoComplete={isLogin ? 'current-password' : 'new-password'}
             formikProps={formikProps}
-            type="password"
+            type='password'
           />
           {!isLogin && (
             <Input
-              id="confirm-password"
-              formikKey="confirmPassword"
+              id='confirm-password'
+              formikKey='confirmPassword'
               formikProps={formikProps}
               label={t('auth:Confirm Password')}
               placeholder={t('auth:Confirm Password')}
-              type="password"
+              type='password'
             />
           )}
           <ReCAPTCHA
@@ -131,18 +131,28 @@ const AuthPage = props => {
             onChange={handleCaptchaResponseChange}
           />
           <Error message={error} />
-          <div className="form-actions">
-            <button type="submit" id="submit" disabled={!recaptcha}>
-              {t(isLogin ? 'auth:Login' : 'auth:Signup')}
-            </button>
-            <div onClick={switchModeHandler}>
-              {t(
-                isLogin
-                  ? 'auth:Dont have an account? Register'
-                  : 'auth:Already have an account? Login'
-              )}
-            </div>
-          </div>
+          <Button
+            variant='primary'
+            type='submit'
+            size='lg'
+            id='submit'
+            disabled={!recaptcha}
+            block
+          >
+            {t(isLogin ? 'auth:Login' : 'auth:Signup')}
+          </Button>
+          <Button
+            variant='outline-secondary'
+            size='sm'
+            onClick={switchModeHandler}
+            block
+          >
+            {t(
+              isLogin
+                ? 'auth:Dont have an account? Register'
+                : 'auth:Already have an account? Login'
+            )}
+          </Button>
         </Form>
       )}
     </Formik>

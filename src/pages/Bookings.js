@@ -78,10 +78,7 @@ const BookingsPage = props => {
           id: selectedBooking._id
         }
       })
-      const updatedBookings = removeFromArrayById(
-        bookings,
-        selectedBooking._id
-      )
+      const updatedBookings = removeFromArrayById(bookings, selectedBooking._id)
       setBookings(updatedBookings)
       sendNotification(`Booking ${event.title} canceled`)
       setSelectedBooking(null)
@@ -103,8 +100,9 @@ const BookingsPage = props => {
     <React.Fragment>
       {selectedBooking && (
         <Modal
-          title="Cancel Booking"
-          onCancel={selectBookingHandler.bind(this, null)}
+          show={selectedBooking}
+          title='Cancel Booking'
+          onHide={selectBookingHandler.bind(this, null)}
           onConfirm={deleteBookingHandler}
           isLoading={isCanceling}
           error={error}

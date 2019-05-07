@@ -9,11 +9,11 @@ import {
   RollbarProvider
 } from './provider'
 import { MainNavigation, Notification } from './components'
-import './App.css'
 import GAListener from './GAListener'
 import { I18nextProvider } from 'react-i18next'
 
 import i18n from './i18n/i18n'
+import { Container } from 'react-bootstrap'
 
 const App = props => {
   return (
@@ -26,9 +26,9 @@ const App = props => {
                 <ApolloProvider>
                   <GraphQLProvider>
                     <MainNavigation />
-                    <main className='main-content'>
+                    <Container>
                       <Routes />
-                    </main>
+                    </Container>
                     <Notification />
                   </GraphQLProvider>
                 </ApolloProvider>

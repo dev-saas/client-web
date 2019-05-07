@@ -3,11 +3,12 @@ import React, { useContext } from 'react'
 import './EventItem.css'
 
 import { AuthContext } from '../../../../context'
+import { Button } from 'react-bootstrap'
 
 const eventItem = ({ event, onEdit, onDetail }) => {
   const { userId } = useContext(AuthContext)
   return (
-    <li className="events__list-item">
+    <li className='events__list-item'>
       <div>
         <h1>{event.title}</h1>
         <h2>
@@ -16,13 +17,13 @@ const eventItem = ({ event, onEdit, onDetail }) => {
       </div>
       <div>
         {userId === event.creator._id ? (
-          <button className="btn" onClick={onEdit.bind(this, event._id)}>
+          <Button variant='primary' onClick={onEdit.bind(this, event._id)}>
             Edit
-          </button>
+          </Button>
         ) : (
-          <button className="btn" onClick={onDetail.bind(this, event._id)}>
+          <Button variant='primary' onClick={onDetail.bind(this, event._id)}>
             View Details
-          </button>
+          </Button>
         )}
       </div>
     </li>

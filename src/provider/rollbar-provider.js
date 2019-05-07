@@ -2,7 +2,7 @@ import React from 'react'
 import Rollbar from 'rollbar'
 import { RollbarContext } from '../context'
 
-const AuthProvider = props => {
+const RollbarProvider = props => {
   const rollbar = new Rollbar({
     accessToken: process.env.REACT_APP_ROLLBAR_TOKEN,
     captureUncaught: true,
@@ -48,4 +48,4 @@ const AuthProvider = props => {
   )
 }
 
-export default AuthProvider
+export default RollbarProvider

@@ -1,6 +1,6 @@
-import React, { useState } from 'react'
-
-import { NotificationContext } from '../context'
+import React, { useState, useContext } from 'react'
+import ReactGA from 'react-ga'
+import { NotificationContext, RollbarContext } from '../context'
 
 const _notifications = []
 const _warnings = []
@@ -20,14 +20,20 @@ const AlertProvider = props => {
   const [warnings, setWarnings] = useState([])
   const [errors, setErrors] = useState([])
 
+  const { logError, logWarning, logInfo } = useContext(RollbarContext)
+
   const sendNotification = (notification, seconds = 5) => {
+    logInfo(notification)
     queue(_notifications, notification, seconds, setNotifications)
   }
   const sendWarning = (notification, seconds = 5) => {
+    logWarning(notification)
     queue(_warnings, notification, seconds, setWarnings)
   }
 
   const sendError = (notification, seconds = 5) => {
+    ReactGA.exception({ description: notification })
+    logError(notification)
     queue(_errors, notification, seconds, setErrors)
   }
 
