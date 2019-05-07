@@ -1,6 +1,6 @@
 import React from 'react'
 import { Form } from 'formik'
-import { Fragment } from '../'
+import { Fragment } from '..'
 
 const FormFragment = ({ children, isLoading, ...rest }) => {
   return (

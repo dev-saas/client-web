@@ -3,7 +3,7 @@ import React from 'react'
 import './BookingsControls.css'
 import { Button } from 'react-bootstrap'
 
-const bookingsControl = props => {
+const BookingsControls = props => {
   return (
     <div className='bookings-control'>
       <Button
@@ -24,4 +24,4 @@ const bookingsControl = props => {
   )
 }
 
-export default bookingsControl
+export default BookingsControls

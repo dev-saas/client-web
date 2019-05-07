@@ -78,7 +78,7 @@ const EventsPage = props => {
       next ({ data }) {
         const updatedEvent = findInArrayById(events, data.updatedEvent._id)
         if (!updatedEvent) return
-        if (updatedEvent && updatedEvent.creator._id !== userId) {
+        if (updatedEvent.creator._id !== userId) {
           setEvents(updateInArray(events, data.updatedEvent))
         }
       },

@@ -15,7 +15,7 @@ const queue = (queue, notification, seconds, setQueue) => {
   }, seconds * 1000)
 }
 
-const AlertProvider = props => {
+const NotificationProvider = props => {
   const [notifications, setNotifications] = useState([])
   const [warnings, setWarnings] = useState([])
   const [errors, setErrors] = useState([])
@@ -53,4 +53,4 @@ const AlertProvider = props => {
   )
 }
 
-export default AlertProvider
+export default NotificationProvider
