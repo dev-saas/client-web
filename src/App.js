@@ -15,30 +15,28 @@ import { I18nextProvider } from 'react-i18next'
 import i18n from './i18n/i18n'
 import { Container } from 'react-bootstrap'
 
-const App = props => {
-  return (
-    <RollbarProvider>
-      <I18nextProvider i18n={i18n}>
-        <HashRouter>
-          <GAListener>
-            <NotificationProvider>
-              <AuthProvider>
-                <ApolloProvider>
-                  <GraphQLProvider>
-                    <MainNavigation />
-                    <Container>
-                      <Routes />
-                    </Container>
-                    <Notification />
-                  </GraphQLProvider>
-                </ApolloProvider>
-              </AuthProvider>
-            </NotificationProvider>
-          </GAListener>
-        </HashRouter>
-      </I18nextProvider>
-    </RollbarProvider>
-  )
-}
+const App = props => (
+  <RollbarProvider>
+    <I18nextProvider i18n={i18n}>
+      <HashRouter>
+        <GAListener>
+          <NotificationProvider>
+            <AuthProvider>
+              <ApolloProvider>
+                <GraphQLProvider>
+                  <MainNavigation />
+                  <Container>
+                    <Routes />
+                  </Container>
+                  <Notification />
+                </GraphQLProvider>
+              </ApolloProvider>
+            </AuthProvider>
+          </NotificationProvider>
+        </GAListener>
+      </HashRouter>
+    </I18nextProvider>
+  </RollbarProvider>
+)
 
 export default App

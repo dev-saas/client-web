@@ -7,7 +7,8 @@
     "test": "nyc cucumber-js",
     "eject": "react-scripts eject",
     "build_testing": "env-cmd .env.test npm run build",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "lint:fix": "eslint --fix ."
   },
   "dependencies": {
     "apollo-cache-inmemory": "^1.5.1",
@@ -48,6 +49,7 @@
   ],
   "devDependencies": {
     "@dev-saas/api": "^1.0.7",
+    "babel-eslint": "^10.0.1",
     "chromedriver": "^2.46.0",
     "cucumber": "^5.1.0",
     "dotenv": "^7.0.0",
