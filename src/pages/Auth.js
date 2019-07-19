@@ -1,12 +1,14 @@
 import React, { useState, useContext, useRef } from 'react'
-import { AuthContext, GraphQLContext, NotificationContext } from '../context'
-import { Formik } from 'formik'
+import { AuthContext, NotificationContext } from '../context'
+import { Formik, Form } from 'formik'
 import { object, string } from 'yup'
-import { Input, Form } from '../components/Form'
+import { Input } from '../components/Form'
 import { Error } from '../components'
 import ReCAPTCHA from 'react-google-recaptcha'
 import { useTranslation } from 'react-i18next'
 import { Button } from 'react-bootstrap'
+
+import { useGraphQL } from '../hooks'
 
 const AuthPage = props => {
   const [isLogin, setIsLogin] = useState(true)
@@ -14,7 +16,7 @@ const AuthPage = props => {
   const { t } = useTranslation()
 
   const { login, setRecaptcha, recaptcha } = useContext(AuthContext)
-  const { query, mutate } = useContext(GraphQLContext)
+  const { query, mutate } = useGraphQL()
   const { sendNotification } = useContext(NotificationContext)
   const recaptchaRef = useRef()
 
@@ -25,14 +27,12 @@ const AuthPage = props => {
     setRecaptcha()
   }
 
-  const submitHandler = async (values, { setSubmitting }) => {
+  const submitHandler = async values => {
     setError()
     const loginQuery = `
       query ($email: Email!, $password: String!) {
         login(email: $email, password: $password) {
-          userId
           token
-          tokenExpiration
         }
       }
     `
@@ -48,8 +48,7 @@ const AuthPage = props => {
     try {
       if (isLogin) {
         const data = await query({ query: loginQuery, variables: values })
-        const { token, userId, tokenExpiration } = data.login
-        login(token, userId, tokenExpiration)
+        login(data.login.token)
       } else {
         const data = await mutate({
           mutation: createMutation,
@@ -61,10 +60,9 @@ const AuthPage = props => {
         setIsLogin(true)
       }
     } catch (err) {
-      setError(err.message)
-    } finally {
-      setSubmitting(false)
-      setRecaptcha()
+      recaptchaRef.current.reset()
+      setRecaptcha(false)
+      console.log(err)
     }
   }
 
@@ -90,39 +88,38 @@ const AuthPage = props => {
         confirmPassword: string().test(
           'passwords-match',
           t('auth:Passwords must match'),
-          function (value) {
+          function(value) {
             return isLogin || this.parent.password === value
           }
         )
-      })}
-    >
+      })}>
       {formikProps => (
-        <Form isLoading={formikProps.isSubmitting}>
+        <Form>
           <Input
-            id='email'
-            formikKey='email'
+            id="email"
+            formikKey="email"
             label={t('auth:Email')}
             formikProps={formikProps}
             placeholder={t('auth:Enter your email')}
-            type='email'
+            type="email"
           />
           <Input
-            id='password'
-            formikKey='password'
+            id="password"
+            formikKey="password"
             label={t('auth:Password')}
             placeholder={t('auth:Password')}
             autoComplete={isLogin ? 'current-password' : 'new-password'}
             formikProps={formikProps}
-            type='password'
+            type="password"
           />
           {!isLogin && (
             <Input
-              id='confirm-password'
-              formikKey='confirmPassword'
+              id="confirm-password"
+              formikKey="confirmPassword"
               formikProps={formikProps}
               label={t('auth:Confirm Password')}
               placeholder={t('auth:Confirm Password')}
-              type='password'
+              type="password"
             />
           )}
           <ReCAPTCHA
@@ -132,21 +129,19 @@ const AuthPage = props => {
           />
           <Error message={error} />
           <Button
-            variant='primary'
-            type='submit'
-            size='lg'
-            id='submit'
-            disabled={!recaptcha}
+            variant="primary"
+            type="submit"
+            size="lg"
+            id="submit"
             block
-          >
+            disabled={!recaptcha}>
             {t(isLogin ? 'auth:Login' : 'auth:Signup')}
           </Button>
           <Button
-            variant='outline-secondary'
-            size='sm'
+            variant="outline-secondary"
+            size="sm"
             onClick={switchModeHandler}
-            block
-          >
+            block>
             {t(
               isLogin
                 ? 'auth:Dont have an account? Register'

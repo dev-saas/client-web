@@ -3,10 +3,11 @@ import { HashRouter } from 'react-router-dom'
 import Routes from './Routes'
 import {
   AuthProvider,
-  GraphQLProvider,
   NotificationProvider,
   ApolloProvider,
-  RollbarProvider
+  RollbarProvider,
+  LoadProvider,
+  GraphQLProvider
 } from './provider'
 import { MainNavigation, Notification } from './components'
 import GAListener from './GAListener'
@@ -22,15 +23,17 @@ const App = props => (
         <GAListener>
           <NotificationProvider>
             <AuthProvider>
-              <ApolloProvider>
-                <GraphQLProvider>
-                  <MainNavigation />
-                  <Container>
-                    <Routes />
-                  </Container>
-                  <Notification />
-                </GraphQLProvider>
-              </ApolloProvider>
+              <LoadProvider>
+                <ApolloProvider>
+                  <GraphQLProvider>
+                    <MainNavigation />
+                    <Container>
+                      <Routes />
+                    </Container>
+                    <Notification />
+                  </GraphQLProvider>
+                </ApolloProvider>
+              </LoadProvider>
             </AuthProvider>
           </NotificationProvider>
         </GAListener>

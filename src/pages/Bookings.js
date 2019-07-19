@@ -1,67 +1,64 @@
-import React, { useState, useContext, useEffect } from 'react'
+import React, { useState, useContext } from 'react'
 
-import { GraphQLContext, NotificationContext } from '../context'
+import { NotificationContext } from '../context'
 import {
   BookingList,
   BookingsChart,
   BookingsControls
 } from '../components/Bookings'
 import { Modal } from '../components'
-import { findInArrayById, removeFromArrayById } from '../helper/array-utils'
+import { useInfiniteScroll, useGraphQL, useList } from '../hooks'
 
 const BookingsPage = props => {
-  const [isLoading, setIsLoading] = useState(false)
-  const [isCanceling, setIsCanceling] = useState(false)
-  const [bookings, setBookings] = useState([])
   const [outputType, setOutputType] = useState('list')
   const [selectedBooking, setSelectedBooking] = useState(null)
   const [error, setError] = useState()
-
-  const { query, mutate } = useContext(GraphQLContext)
-  const { sendNotification, sendError } = useContext(NotificationContext)
-
-  useEffect(() => {
+  const { query, mutate } = useGraphQL()
+  const { sendNotification } = useContext(NotificationContext)
+  const { list, addArray, remove, get } = useList()
+  const { page, setPageInfo } = useInfiniteScroll(() => {
     fetchBookings()
-  }, [])
-
+  })
   const fetchBookings = async () => {
-    setIsLoading(true)
     const bookingsQuery = `
-      query {
-        bookings {
-          _id
-          createdAt
-          event {
+      query ($page: PageInput) {
+        getBookings (page: $page){
+          pageInfo {
+            hasNextPage
+            cursor
+          }
+          edges {
             _id
-            title
-            date
-            price
+            createdAt
+            event {
+              _id
+              title
+              date
+              price
+            }
           }
         }
       }
     `
 
-    try {
-      const { bookings } = await query({
-        query: bookingsQuery,
-        fetchPolicy: 'no-cache'
-      })
-      setBookings(bookings)
-      setIsLoading(false)
-    } catch (err) {
-      sendError(err.message)
-    } finally {
-      setIsLoading(false)
-    }
+    const { getBookings } = await query({
+      query: bookingsQuery,
+      variables: {
+        ...page()
+      },
+      fetchPolicy: 'no-cache'
+    })
+    if (!getBookings.edges[0]) return
+    addArray(getBookings.edges)
+    setPageInfo(getBookings.pageInfo)
   }
 
   const selectBookingHandler = bookingId => {
     setError()
-    setSelectedBooking(findInArrayById(bookings, bookingId))
+    setSelectedBooking(get(bookingId))
   }
 
   const deleteBookingHandler = async () => {
-    setIsCanceling(true)
     const cancelBookingMutation = `
       mutation ($id: ID!) {
         event: cancelBooking(bookingId: $id) {
@@ -78,14 +75,11 @@ const BookingsPage = props => {
           id: selectedBooking._id
         }
       })
-      const updatedBookings = removeFromArrayById(bookings, selectedBooking._id)
-      setBookings(updatedBookings)
+      remove(selectedBooking._id)
       sendNotification(`Booking ${event.title} canceled`)
       setSelectedBooking(null)
     } catch (err) {
       setError(err.message)
-    } finally {
-      setIsCanceling(false)
     }
   }
 
@@ -101,12 +95,10 @@ const BookingsPage = props => {
       {selectedBooking && (
         <Modal
           show={selectedBooking}
-          title='Cancel Booking'
+          title="Cancel Booking"
           onHide={selectBookingHandler.bind(this, null)}
           onConfirm={deleteBookingHandler}
-          isLoading={isCanceling}
-          error={error}
-        >
+          error={error}>
           {selectedBooking.event.title}
         </Modal>
       )}
@@ -115,13 +107,9 @@ const BookingsPage = props => {
         onChange={changeOutputTypeHandler}
       />
       {outputType === 'list' ? (
-        <BookingList
-          isLoading={isLoading}
-          bookings={bookings}
-          onDelete={selectBookingHandler}
-        />
+        <BookingList bookings={list} onDelete={selectBookingHandler} />
       ) : (
-        <BookingsChart bookings={bookings} />
+        <BookingsChart bookings={list} />
       )}
     </React.Fragment>
   )
