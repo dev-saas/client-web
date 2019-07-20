@@ -7,12 +7,12 @@ chromeCapabilities.set('chromeOptions', {
   args: ['--headless', '--disable-gpu', '--start-maximized']
 })
 
-function Init () {
+function Init() {
   this.driver = new Builder()
     .forBrowser('chrome')
     .withCapabilities(chromeCapabilities)
     .build()
-  setDefaultTimeout(20 * 1000)
+  setDefaultTimeout(30 * 1000)
 }
 
 setWorldConstructor(Init)
