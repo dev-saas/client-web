@@ -1,5 +1,3 @@
-/* eslint-disable indent */
-
 import { useEffect, useState } from 'react'
 
 export default function useInfiniteScroll(loadMoreItems) {
@@ -20,12 +18,12 @@ export default function useInfiniteScroll(loadMoreItems) {
     }
   })
 
-  const page = (pageSize = 10) =>
-    pageInfo
-      ? {
-          page: { cursor: pageInfo.cursor, pageSize }
-        }
-      : null
+  const page = (pageSize = 10) => ({
+    page: {
+      cursor: pageInfo.cursor || null,
+      pageSize
+    }
+  })
 
   useEffect(loadMoreItems, [])
 

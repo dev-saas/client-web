@@ -1,12 +1,17 @@
-import React, { useState, useContext, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 
 import { Modal, EventList } from '../components'
-import { AuthContext, NotificationContext } from '../context'
 import { Formik, Form } from 'formik'
 import { object, string, number } from 'yup'
 import { Input, TextArea, Action } from '../components/Form'
 import { Button, Card } from 'react-bootstrap'
-import { useInfiniteScroll, useGraphQL, useList } from '../hooks'
+import {
+  useInfiniteScroll,
+  useGraphQL,
+  useList,
+  useNotification,
+  useAuth
+} from '../hooks'
 
 const validationEvent = object().shape({
   title: string().required(),
@@ -21,8 +26,8 @@ const EventsPage = props => {
   const [updating, setUpdating] = useState(null)
 
   const [error, setError] = useState()
-  const { sendNotification, sendError } = useContext(NotificationContext)
-  const { token, userId } = useContext(AuthContext)
+  const { sendNotification, sendError } = useNotification()
+  const { userId } = useAuth()
   const { query, mutate, subscribe } = useGraphQL()
   const { page, setPageInfo } = useInfiniteScroll(() => {
     fetchEvents()
@@ -128,10 +133,10 @@ const EventsPage = props => {
     }
   }
 
-  const modalConfirmUpdateHandler = async (values, { setSubmitting }) => {
+  const modalConfirmUpdateHandler = async (event, { setSubmitting }) => {
     const updateEventMutation = `
-      mutation ($_id: ID!, $title: String!, $description: String!, $price: Float!, $date: DateTime!) {
-        event: updateEvent(input: {_id: $_id, event: {title: $title, description: $description, price: $price, date: $date}}) {
+      mutation ($event: UpdateEventInput!) {
+        updatedEvent: updateEvent(event: $event) {
           _id
           title
           description
@@ -141,16 +146,13 @@ const EventsPage = props => {
       }
     `
     try {
-      const { event } = await mutate({
+      const { updatedEvent } = await mutate({
         mutation: updateEventMutation,
-        variables: {
-          _id: updating._id,
-          ...values
-        }
+        variables: { event }
       })
-      update(event)
+      update(updatedEvent)
       setUpdating(null)
-      sendNotification(`Event ${event.title} updated`)
+      sendNotification(`Event ${updatedEvent.title} updated`)
     } catch (err) {
       setError(err.message)
     } finally {
@@ -237,7 +239,7 @@ const EventsPage = props => {
 
   return (
     <React.Fragment>
-      <Modal title="Add Event" show={creating}>
+      <Modal title='Add Event' show={creating}>
         <Formik
           initialValues={{
             title: '',
@@ -248,34 +250,34 @@ const EventsPage = props => {
           onSubmit={modalConfirmHandler}
           validationSchema={validationEvent}>
           {formikProps => (
-            <Form id="createForm">
+            <Form id='createForm'>
               <Input
-                formikKey="title"
-                label="Title"
-                type="text"
+                formikKey='title'
+                label='Title'
+                type='text'
                 formikProps={formikProps}
               />
               <Input
-                formikKey="price"
-                label="Price"
-                type="number"
+                formikKey='price'
+                label='Price'
+                type='number'
                 formikProps={formikProps}
               />
               <Input
-                formikKey="date"
-                label="Date"
-                type="datetime-local"
+                formikKey='date'
+                label='Date'
+                type='datetime-local'
                 formikProps={formikProps}
               />
               <TextArea
-                formikKey="description"
-                rows="4"
-                label="Description"
+                formikKey='description'
+                rows='4'
+                label='Description'
                 formikProps={formikProps}
               />
               <Action
                 onHide={modalCancelHandler}
-                confirmText="Create"
+                confirmText='Create'
                 submit
                 error={error}
               />
@@ -284,9 +286,10 @@ const EventsPage = props => {
         </Formik>
       </Modal>
       {updating && (
-        <Modal title="Update Event" show={updating}>
+        <Modal title='Update Event' show={!!updating}>
           <Formik
             initialValues={{
+              _id: updating._id,
               title: updating.title,
               price: updating.price,
               date: new Date(updating.date).toISOString().slice(0, -5),
@@ -295,38 +298,38 @@ const EventsPage = props => {
             onSubmit={modalConfirmUpdateHandler}
             validationSchema={validationEvent}>
             {formikProps => (
-              <form id="createForm">
+              <Form id='updateForm'>
                 <Input
-                  formikKey="title"
-                  label="Title"
-                  type="text"
+                  formikKey='title'
+                  label='Title'
+                  type='text'
                   formikProps={formikProps}
                 />
                 <Input
-                  formikKey="price"
-                  label="Price"
-                  type="number"
+                  formikKey='price'
+                  label='Price'
+                  type='number'
                   formikProps={formikProps}
                 />
                 <Input
-                  formikKey="date"
-                  label="Date"
-                  type="datetime-local"
+                  formikKey='date'
+                  label='Date'
+                  type='datetime-local'
                   formikProps={formikProps}
                 />
                 <TextArea
-                  formikKey="description"
-                  rows="4"
-                  label="Description"
+                  formikKey='description'
+                  rows='4'
+                  label='Description'
                   formikProps={formikProps}
                 />
                 <Action
                   onHide={modalCancelHandler}
-                  confirmText="Save"
+                  confirmText='Save'
                   submit
                   error={error}
                 />
-              </form>
+              </Form>
             )}
           </Formik>
         </Modal>
@@ -336,9 +339,9 @@ const EventsPage = props => {
           show={selectedEvent}
           title={selectedEvent.title}
           onHide={modalCancelHandler}
-          onConfirm={token && bookEventHandler}
-          cancelText={!token && 'Close'}
-          confirmText={token && 'Book'}
+          onConfirm={userId && bookEventHandler}
+          cancelText={!userId && 'Close'}
+          confirmText={userId && 'Book'}
           error={error}>
           <h1>{selectedEvent.title}</h1>
           <h2>
@@ -348,11 +351,11 @@ const EventsPage = props => {
           <p>{selectedEvent.description}</p>
         </Modal>
       )}
-      {token && (
-        <Card className="text-center">
+      {userId && (
+        <Card className='text-center'>
           <Card.Body>
             <Card.Title>Share your own Events!</Card.Title>
-            <Button variant="primary" onClick={startCreateEventHandler}>
+            <Button variant='primary' onClick={startCreateEventHandler}>
               Create Event
             </Button>
           </Card.Body>

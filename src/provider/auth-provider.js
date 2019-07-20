@@ -12,23 +12,27 @@ const AuthProvider = props => {
 
   useEffect(() => {
     if (!token) return
-    const user = decode(token)
-    setUserId(user.id)
-    setRole(user.role)
-    setEmail(user.email)
+    try {
+      const user = decode(token)
+      setUserId(user.id)
+      setRole(user.role)
+      setEmail(user.email)
+    } catch (err) {
+      console.log(err)
+      logout()
+    }
   }, [token])
 
   const login = token => {
     setToken(token)
     localStorage.setItem('token', token)
-    localStorage.setItem('userId', userId)
-    localStorage.setItem('role', role)
   }
 
   const logout = () => {
     setToken(null)
     setUserId(null)
     setRole(null)
+    setEmail(null)
     localStorage.clear()
   }
 

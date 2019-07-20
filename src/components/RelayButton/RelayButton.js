@@ -1,10 +1,11 @@
 import React, { useContext } from 'react'
-import { GraphQLContext, NotificationContext, BatContext } from '../../context'
+import { BatContext } from '../../context'
+import { useGraphQL, useNotification } from '../../hooks'
 import './RelayButton.css'
 
 const RelayButton = ({ pino }) => {
-  const { mutate } = useContext(GraphQLContext)
-  const { sendError } = useContext(NotificationContext)
+  const { mutate } = useGraphQL()
+  const { sendError } = useNotification()
 
   const { relay1, relay2 } = useContext(BatContext)
   const active = pino === 1 ? relay1 : relay2
@@ -34,11 +35,10 @@ const RelayButton = ({ pino }) => {
       {pino} = {active ? 'on' : 'off'}
       <div
         onClick={handleClick}
-        className={`cube-switch ${active && 'active'}`}
-      >
-        <span className="switch">
-          <span className="switch-state off">Off</span>
-          <span className="switch-state on">On</span>
+        className={`cube-switch ${active && 'active'}`}>
+        <span className='switch'>
+          <span className='switch-state off'>Off</span>
+          <span className='switch-state on'>On</span>
         </span>
       </div>
     </React.Fragment>

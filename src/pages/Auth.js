@@ -1,73 +1,28 @@
-import React, { useState, useContext, useRef } from 'react'
-import { AuthContext, NotificationContext } from '../context'
+import React, { useState } from 'react'
 import { Formik, Form } from 'formik'
 import { object, string } from 'yup'
 import { Input } from '../components/Form'
-import { Error } from '../components'
 import ReCAPTCHA from 'react-google-recaptcha'
 import { useTranslation } from 'react-i18next'
 import { Button } from 'react-bootstrap'
 
-import { useGraphQL } from '../hooks'
+import { useAuth, useRecaptcha } from '../hooks'
 
-const AuthPage = props => {
+const AuthPage = () => {
   const [isLogin, setIsLogin] = useState(true)
-  const [error, setError] = useState()
   const { t } = useTranslation()
 
-  const { login, setRecaptcha, recaptcha } = useContext(AuthContext)
-  const { query, mutate } = useGraphQL()
-  const { sendNotification } = useContext(NotificationContext)
-  const recaptchaRef = useRef()
+  const { login, register } = useAuth()
+  const {
+    recaptchaRef,
+    resetRecaptcha,
+    handleRecaptcha,
+    recaptcha
+  } = useRecaptcha()
 
   const switchModeHandler = () => {
     setIsLogin(!isLogin)
-    setError()
-    recaptchaRef.current.reset()
-    setRecaptcha()
-  }
-
-  const submitHandler = async values => {
-    setError()
-    const loginQuery = `
-      query ($email: Email!, $password: String!) {
-        login(email: $email, password: $password) {
-          token
-        }
-      }
-    `
-    const createMutation = `
-      mutation ($email: Email!, $password: String!) {
-        createUser(email: $email, password: $password) {
-          _id
-          email
-        }
-      }
-    `
-
-    try {
-      if (isLogin) {
-        const data = await query({ query: loginQuery, variables: values })
-        login(data.login.token)
-      } else {
-        const data = await mutate({
-          mutation: createMutation,
-          variables: values
-        })
-        const { email } = data.createUser
-        sendNotification(email + ' ' + t('auth:registered successfully'))
-        values.password = ''
-        setIsLogin(true)
-      }
-    } catch (err) {
-      recaptchaRef.current.reset()
-      setRecaptcha(false)
-      console.log(err)
-    }
-  }
-
-  const handleCaptchaResponseChange = token => {
-    setRecaptcha(token)
+    resetRecaptcha()
   }
 
   return (
@@ -77,7 +32,14 @@ const AuthPage = props => {
         password: '',
         confirmPassword: ''
       }}
-      onSubmit={submitHandler}
+      onSubmit={async ({ email, password }) => {
+        if (isLogin) {
+          if (!(await login(email, password))) resetRecaptcha()
+        } else {
+          setIsLogin(await register(email, password))
+          resetRecaptcha()
+        }
+      }}
       validationSchema={object().shape({
         email: string()
           .email('Email not valid')
@@ -96,50 +58,49 @@ const AuthPage = props => {
       {formikProps => (
         <Form>
           <Input
-            id="email"
-            formikKey="email"
+            id='email'
+            formikKey='email'
             label={t('auth:Email')}
             formikProps={formikProps}
             placeholder={t('auth:Enter your email')}
-            type="email"
+            type='email'
           />
           <Input
-            id="password"
-            formikKey="password"
+            id='password'
+            formikKey='password'
             label={t('auth:Password')}
             placeholder={t('auth:Password')}
             autoComplete={isLogin ? 'current-password' : 'new-password'}
             formikProps={formikProps}
-            type="password"
+            type='password'
           />
           {!isLogin && (
             <Input
-              id="confirm-password"
-              formikKey="confirmPassword"
+              id='confirm-password'
+              formikKey='confirmPassword'
               formikProps={formikProps}
               label={t('auth:Confirm Password')}
               placeholder={t('auth:Confirm Password')}
-              type="password"
+              type='password'
             />
           )}
           <ReCAPTCHA
             ref={recaptchaRef}
             sitekey={process.env.REACT_APP_RECAPTCHA_SITE_KEY}
-            onChange={handleCaptchaResponseChange}
+            onChange={handleRecaptcha}
           />
-          <Error message={error} />
           <Button
-            variant="primary"
-            type="submit"
-            size="lg"
-            id="submit"
+            variant='primary'
+            type='submit'
+            size='lg'
+            id='submit'
             block
-            disabled={!recaptcha}>
+            disabled={!recaptcha || !formikProps.isValid}>
             {t(isLogin ? 'auth:Login' : 'auth:Signup')}
           </Button>
           <Button
-            variant="outline-secondary"
-            size="sm"
+            variant='outline-secondary'
+            size='sm'
             onClick={switchModeHandler}
             block>
             {t(

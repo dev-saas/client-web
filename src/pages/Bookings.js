@@ -1,20 +1,24 @@
-import React, { useState, useContext } from 'react'
+import React, { useState } from 'react'
 
-import { NotificationContext } from '../context'
 import {
   BookingList,
   BookingsChart,
   BookingsControls
 } from '../components/Bookings'
 import { Modal } from '../components'
-import { useInfiniteScroll, useGraphQL, useList } from '../hooks'
+import {
+  useInfiniteScroll,
+  useGraphQL,
+  useList,
+  useNotification
+} from '../hooks'
 
 const BookingsPage = props => {
   const [outputType, setOutputType] = useState('list')
   const [selectedBooking, setSelectedBooking] = useState(null)
   const [error, setError] = useState()
   const { query, mutate } = useGraphQL()
-  const { sendNotification } = useContext(NotificationContext)
+  const { sendNotification } = useNotification()
   const { list, addArray, remove, get } = useList()
   const { page, setPageInfo } = useInfiniteScroll(() => {
     fetchBookings()
@@ -95,7 +99,7 @@ const BookingsPage = props => {
       {selectedBooking && (
         <Modal
           show={selectedBooking}
-          title="Cancel Booking"
+          title='Cancel Booking'
           onHide={selectBookingHandler.bind(this, null)}
           onConfirm={deleteBookingHandler}
           error={error}>
