@@ -7,14 +7,16 @@ import {
   ApolloProvider,
   RollbarProvider,
   LoadProvider,
-  GraphQLProvider
+  GraphQLProvider,
+  ThemeProvider
 } from './provider'
 import { MainNavigation, Notification } from './components'
 import GAListener from './GAListener'
 import { I18nextProvider } from 'react-i18next'
 
 import i18n from './i18n/i18n'
-import { Container } from 'react-bootstrap'
+
+import 'typeface-roboto'
 
 const App = props => (
   <RollbarProvider>
@@ -26,11 +28,11 @@ const App = props => (
               <LoadProvider>
                 <ApolloProvider>
                   <GraphQLProvider>
-                    <MainNavigation />
-                    <Container>
+                    <ThemeProvider>
+                      <MainNavigation />
                       <Routes />
-                    </Container>
-                    <Notification />
+                      <Notification />
+                    </ThemeProvider>
                   </GraphQLProvider>
                 </ApolloProvider>
               </LoadProvider>

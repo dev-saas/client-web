@@ -1,13 +1,12 @@
-import React, { useContext } from 'react'
+import React from 'react'
 import { Navbar, Nav, NavDropdown } from 'react-bootstrap'
 import { useTranslation } from 'react-i18next'
-import { AuthContext } from '../../context'
-import { useAuth } from '../../hooks'
-
+import { useAuth, useStyle } from '../../hooks'
+import { THEMES } from '../../styles/styles'
 const mainNavigation = props => {
   const { t, i18n } = useTranslation()
-  const { token, logout } = useContext(AuthContext)
-  const { email } = useAuth()
+  const { email, logout } = useAuth()
+  const { setTheme } = useStyle()
 
   const LanguageButton = ({ language, children }) =>
     i18n.language !== language && (
@@ -23,13 +22,25 @@ const mainNavigation = props => {
       bg='dark'
       variant='dark'
       sticky='top'>
+      <button
+        onClick={() => {
+          setTheme(THEMES.Light)
+        }}>
+        Light
+      </button>
+      <button
+        onClick={() => {
+          setTheme(THEMES.Dark)
+        }}>
+        Dark
+      </button>
       <Navbar.Brand>{email}</Navbar.Brand>
       <Navbar.Toggle />
       <Navbar.Collapse>
         <Nav className='mr-auto' />
         <Nav>
           <Nav.Link href='#events'>{t('navigation:Events')}</Nav.Link>
-          {token && (
+          {email && (
             <React.Fragment>
               <Nav.Link href='#bookings'>
                 {t('navigation:Bookings')}
@@ -42,7 +53,7 @@ const mainNavigation = props => {
               </div>
             </React.Fragment>
           )}
-          {!token && (
+          {!email && (
             <Nav.Link href='#auth'>
               {t('navigation:Authenticate')}
             </Nav.Link>

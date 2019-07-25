@@ -4,7 +4,7 @@ export default React.createContext({
   sendNotification: message => {},
   notifications: [],
   sendWarning: message => {},
-  Warnings: [],
+  warnings: [],
   sendError: message => {},
   errors: []
 })

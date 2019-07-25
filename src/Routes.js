@@ -1,20 +1,18 @@
-import React, { useContext } from 'react'
-import { AuthContext } from './context'
+import React from 'react'
+import { useAuth } from './hooks'
 import { Route, Redirect, Switch } from 'react-router-dom'
-
 import { AuthPage, BookingsPage, EventsPage, RoomPage } from './pages'
-
 const Routes = props => {
-  const { token } = useContext(AuthContext)
+  const { userId } = useAuth()
   return (
     <Switch>
-      {token && <Redirect from="/" to="/events" exact />}
-      {token && <Redirect from="/auth" to="/events" exact />}
-      {!token && <Route path="/auth" component={AuthPage} />}
-      <Route path="/events" component={EventsPage} />
-      {token && <Route path="/bookings" component={BookingsPage} />}
-      {token && <Route path="/bat" component={RoomPage} />}
-      {!token && <Redirect to="/auth" exact />}
+      {userId && <Redirect from='/' to='/events' exact />}
+      {userId && <Redirect from='/auth' to='/events' exact />}
+      {!userId && <Route path='/auth' component={AuthPage} />}
+      <Route path='/events' component={EventsPage} />
+      {userId && <Route path='/bookings' component={BookingsPage} />}
+      {userId && <Route path='/bat' component={RoomPage} />}
+      {!userId && <Redirect to='/auth' exact />}
     </Switch>
   )
 }

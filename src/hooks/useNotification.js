@@ -2,13 +2,21 @@ import { useContext } from 'react'
 import { NotificationContext } from '../context'
 
 export default function useGraphQL() {
-  const { sendError, sendNotification, sendWarning } = useContext(
-    NotificationContext
-  )
+  const {
+    sendError,
+    sendNotification,
+    sendWarning,
+    warnings,
+    errors,
+    notifications
+  } = useContext(NotificationContext)
 
   return {
     sendError,
     sendNotification,
-    sendWarning
+    sendWarning,
+    warnings,
+    errors,
+    notifications
   }
 }
