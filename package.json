@@ -19,7 +19,7 @@
     "apollo-link-http": "^1.5.12",
     "apollo-link-ws": "^1.0.15",
     "chart.js": "^1.1.1",
-    "formik": "^1.5.1",
+    "formik": "^2.0.1-rc.12",
     "graphql": "^14.1.1",
     "graphql-tag": "^2.10.1",
     "i18next": "^15.0.9",

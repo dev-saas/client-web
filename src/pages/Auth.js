@@ -58,8 +58,8 @@ const AuthPage = () => {
             setIsLogin(await register(email, password))
             resetRecaptcha()
           }
-        }}>
-        {({ isValid, ...formikProps }) => (
+        }}
+        render={({ isValid }) => (
           <div style={styles.paper}>
             <Avatar style={styles.avatar}>
               <LockOutlinedIcon />
@@ -77,8 +77,6 @@ const AuthPage = () => {
                 autoFocus
                 id='email'
                 name='email'
-                formikProps={formikProps}
-                formikKey='email'
               />
               <TextField
                 variant='outlined'
@@ -91,8 +89,6 @@ const AuthPage = () => {
                 autoComplete={
                   isLogin ? 'current-password' : 'new-password'
                 }
-                formikProps={formikProps}
-                formikKey='password'
               />
               {!isLogin && (
                 <TextField
@@ -103,8 +99,6 @@ const AuthPage = () => {
                   label={t('auth:Confirm Password')}
                   type='password'
                   id='confirm-password'
-                  formikProps={formikProps}
-                  formikKey='confirmPassword'
                 />
               )}
               <div style={styles.center}>
@@ -133,7 +127,7 @@ const AuthPage = () => {
             </Form>
           </div>
         )}
-      </Formik>
+      />
     </Container>
   )
 }

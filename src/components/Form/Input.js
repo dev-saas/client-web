@@ -1,19 +1,16 @@
 import React from 'react'
-
+import { useField } from 'formik'
 import { TextField } from '@material-ui/core'
 
-const Input = ({ formikProps, formikKey, ...rest }) => {
+const Input = ({ name, ...rest }) => {
+  const [field, meta] = useField(name)
+  const { error, touched } = meta
   return (
     <TextField
-      onChange={formikProps.handleChange(formikKey)}
-      onBlur={formikProps.handleBlur(formikKey)}
-      value={formikProps.values[formikKey]}
-      error={
-        formikProps.errors[formikKey] && formikProps.touched[formikKey]
-      }
-      helperText={
-        formikProps.touched[formikKey] && formikProps.errors[formikKey]
-      }
+      {...field}
+      error={touched && error}
+      helperText={touched && error}
+      name={name}
       {...rest}
     />
   )
