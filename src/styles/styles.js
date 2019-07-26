@@ -23,6 +23,10 @@ const Theme = pallete => ({
   body: {
     backgroundColor: pallete.color0
   },
+  navbar: {
+    backgroundColor: pallete.color0,
+    flexGrow: 1
+  },
   form: {
     width: '100%', // Fix IE 11 issue.
     marginTop: '4px'
