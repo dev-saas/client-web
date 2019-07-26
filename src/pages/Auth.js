@@ -3,13 +3,9 @@ import { Formik, Form } from 'formik'
 import { object, string } from 'yup'
 import ReCAPTCHA from 'react-google-recaptcha'
 import { useTranslation } from 'react-i18next'
-
 import { useAuth, useRecaptcha, useStyle } from '../hooks'
-
 import TextField from '../components/Form/Input'
-
 import { Avatar, Button, Typography, Container } from '@material-ui/core'
-
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined'
 
 const AuthPage = () => {
@@ -23,10 +19,6 @@ const AuthPage = () => {
     handleRecaptcha,
     recaptcha
   } = useRecaptcha()
-
-  const switchModeHandler = () => {
-    setIsLogin(!isLogin)
-  }
 
   return (
     <Container maxWidth='xs'>
@@ -117,7 +109,7 @@ const AuthPage = () => {
                 disabled={!recaptcha || !isValid}>
                 {t(isLogin ? 'auth:Login' : 'auth:Register')}
               </Button>
-              <Button onClick={switchModeHandler}>
+              <Button onClick={() => setIsLogin(!isLogin)}>
                 {t(
                   isLogin
                     ? 'auth:Dont have an account? Register'
