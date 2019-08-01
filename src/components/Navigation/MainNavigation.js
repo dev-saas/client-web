@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Navbar, Nav, NavDropdown } from 'react-bootstrap'
+import { Nav } from 'react-bootstrap'
 import { useTranslation } from 'react-i18next'
 import { useAuth, useStyle } from '../../hooks'
 import { THEMES } from '../../styles/styles'

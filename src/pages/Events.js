@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-
+import { findInArrayById } from '../helper/array-utils'
 import { Modal, EventList } from '../components'
 import { Formik, Form } from 'formik'
 import { object, string, number } from 'yup'
@@ -7,10 +7,10 @@ import { Input, TextArea, Action } from '../components/Form'
 import { Button, Card } from 'react-bootstrap'
 import {
   useInfiniteScroll,
-  useGraphQL,
-  useList,
   useNotification,
-  useAuth
+  useAuth,
+  useMutation,
+  useEvents
 } from '../hooks'
 
 const validationEvent = object().shape({
@@ -21,81 +21,30 @@ const validationEvent = object().shape({
 })
 
 const EventsPage = props => {
+  const { events, CreateEvent, UpdateEvent, fetchEvents } = useEvents()
   const [creating, setCreating] = useState(false)
   const [selectedEvent, setSelectedEvent] = useState(null)
   const [updating, setUpdating] = useState(null)
 
-  const [error, setError] = useState()
-  const { sendNotification, sendError } = useNotification()
-  const { userId } = useAuth()
-  const { query, mutate, subscribe } = useGraphQL()
-  const { page, setPageInfo } = useInfiniteScroll(() => {
-    fetchEvents()
-  })
-
-  const { list, addArray, add, update, get } = useList()
-
-  const s1 = subscribe({
-    subscription: `
-      subscription {
-        newEvent {
-          _id
-          title
-          description
-          price
-          date
-          creator {
-            _id
-          }
-        }
-      }
-    `,
-    callback: {
-      next({ data }) {
-        const { newEvent } = data
-        if (userId !== newEvent.creator._id) {
-          add(newEvent)
-        }
-      },
-      error(value) {
-        sendError(value)
-      }
-    }
-  })
-
-  const s2 = subscribe({
-    subscription: `
-      subscription {
-        updatedEvent {
-          _id
-          title
-          description
-          price
-          date
-        }
-      }
-    `,
-    callback: {
-      next({ data }) {
-        const updatedEvent = get(data.updatedEvent._id)
-        if (!updatedEvent) return
-        if (updatedEvent.creator._id !== userId) {
-          update(data.updatedEvent)
-        }
-      },
-      error(value) {
-        sendError(value)
-      }
-    }
-  })
-
   useEffect(() => {
     fetchEvents()
-    return () => {
-      s1.unsubscribe()
-      s2.unsubscribe()
-    }
   }, [])
+
+  const [loadingBooking, mutateBooking] = useMutation(`
+mutation BookEvent($id: ID!) {
+  bookEvent(eventId: $id) {
+    _id
+    createdAt
+    updatedAt
+  }
+}
+`)
+
+  const [error, setError] = useState()
+  const { sendNotification } = useNotification()
+  const { userId } = useAuth()
+
+  useInfiniteScroll(fetchEvents)
 
   const startCreateEventHandler = () => {
     setError()
@@ -103,27 +52,8 @@ const EventsPage = props => {
   }
 
   const modalConfirmHandler = async (values, { setSubmitting }) => {
-    const createEventMutation = `
-      mutation ($title: String!, $description: String!, $price: Float!, $date: DateTime!) {
-        newEvent: createEvent(eventInput: {title: $title, description: $description, price: $price, date: $date}) {
-          _id
-          title
-          description
-          date
-          price
-          creator {
-            _id
-          }
-        }
-      }
-    `
-
     try {
-      const { newEvent } = await mutate({
-        mutation: createEventMutation,
-        variables: values
-      })
-      add(newEvent)
+      const newEvent = await CreateEvent(values)
       setCreating(false)
       sendNotification(`Event ${newEvent.title} created`)
     } catch (err) {
@@ -134,23 +64,8 @@ const EventsPage = props => {
   }
 
   const modalConfirmUpdateHandler = async (event, { setSubmitting }) => {
-    const updateEventMutation = `
-      mutation ($event: UpdateEventInput!) {
-        updatedEvent: updateEvent(event: $event) {
-          _id
-          title
-          description
-          date
-          price
-        }
-      }
-    `
     try {
-      const { updatedEvent } = await mutate({
-        mutation: updateEventMutation,
-        variables: { event }
-      })
-      update(updatedEvent)
+      const updatedEvent = await UpdateEvent(event)
       setUpdating(null)
       sendNotification(`Event ${updatedEvent.title} updated`)
     } catch (err) {
@@ -162,7 +77,7 @@ const EventsPage = props => {
 
   const editHandler = eventId => {
     setError()
-    setUpdating(get(eventId))
+    setUpdating(findInArrayById(events, eventId))
   }
 
   const modalCancelHandler = () => {
@@ -172,64 +87,14 @@ const EventsPage = props => {
     setUpdating(null)
   }
 
-  const fetchEvents = async () => {
-    const eventsQuery = `
-      query ($page: PageInput) {
-        getEvents (page: $page) {
-          pageInfo {
-            hasNextPage
-            cursor
-          }
-          edges {
-          _id
-          title
-          description
-          date
-          price
-          creator {
-            _id
-            email
-          }
-        }
-      }
-    }
-    `
-    try {
-      const { getEvents } = await query({
-        query: eventsQuery,
-        variables: {
-          ...page()
-        },
-        fetchPolicy: 'no-cache'
-      })
-      if (!getEvents.edges[0]) return
-      setPageInfo(getEvents.pageInfo)
-      addArray(getEvents.edges)
-    } catch (err) {
-      console.log(err)
-    }
-  }
-
   const showDetailHandler = eventId => {
     setError()
-    setSelectedEvent(get(eventId))
+    setSelectedEvent(findInArrayById(events, eventId))
   }
 
   const bookEventHandler = async () => {
-    const bookEventMutation = `
-      mutation BookEvent($id: ID!) {
-        bookEvent(eventId: $id) {
-          _id
-          createdAt
-          updatedAt
-        }
-      }
-    `
     try {
-      await mutate({
-        mutation: bookEventMutation,
-        variables: { id: selectedEvent._id }
-      })
+      await mutateBooking({ id: selectedEvent._id })
       sendNotification(`Event ${selectedEvent.title} booked`)
       setSelectedEvent(null)
     } catch (err) {
@@ -362,7 +227,7 @@ const EventsPage = props => {
         </Card>
       )}
       <EventList
-        events={list}
+        events={events}
         onDetail={showDetailHandler}
         onEdit={editHandler}
       />

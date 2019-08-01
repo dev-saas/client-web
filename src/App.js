@@ -17,27 +17,30 @@ import { I18nextProvider } from 'react-i18next'
 import i18n from './i18n/i18n'
 
 import 'typeface-roboto'
+import { StateProvider } from './store'
 
 const App = props => (
   <RollbarProvider>
     <I18nextProvider i18n={i18n}>
       <HashRouter>
         <GAListener>
-          <NotificationProvider>
-            <AuthProvider>
-              <LoadProvider>
-                <ApolloProvider>
-                  <GraphQLProvider>
-                    <ThemeProvider>
-                      <MainNavigation />
-                      <Routes />
-                      <Notification />
-                    </ThemeProvider>
-                  </GraphQLProvider>
-                </ApolloProvider>
-              </LoadProvider>
-            </AuthProvider>
-          </NotificationProvider>
+          <StateProvider>
+            <NotificationProvider>
+              <AuthProvider>
+                <LoadProvider>
+                  <ApolloProvider>
+                    <GraphQLProvider>
+                      <ThemeProvider>
+                        <MainNavigation />
+                        <Routes />
+                        <Notification />
+                      </ThemeProvider>
+                    </GraphQLProvider>
+                  </ApolloProvider>
+                </LoadProvider>
+              </AuthProvider>
+            </NotificationProvider>
+          </StateProvider>
         </GAListener>
       </HashRouter>
     </I18nextProvider>

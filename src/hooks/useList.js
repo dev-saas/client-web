@@ -1,27 +1,23 @@
 /* eslint-disable indent */
 
-import { useState } from 'react'
 import {
   removeFromArrayById,
   updateInArray,
   findInArrayById
 } from '../helper/array-utils'
 
-export default function useList(loadMoreItems) {
-  const [list, setList] = useState([])
+export default function useList(list) {
+  const addArray = newItens => [...list, ...newItens]
 
-  const addArray = newItens => setList([...list, ...newItens])
+  const add = item => [...list, item]
 
-  const add = item => setList([...list, item])
-
-  const remove = id => setList(removeFromArrayById(list, id))
+  const remove = id => removeFromArrayById(list, id)
 
   const get = id => findInArrayById(list, id)
 
-  const update = item => setList(updateInArray(list, item))
+  const update = item => updateInArray(list, item)
 
   return {
-    list,
     addArray,
     remove,
     add,

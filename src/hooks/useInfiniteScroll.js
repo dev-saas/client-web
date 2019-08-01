@@ -1,8 +1,6 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 
 export default function useInfiniteScroll(loadMoreItems) {
-  const [pageInfo, setPageInfo] = useState({})
-
   const shouldLoadMoreItems = () =>
     window.innerHeight + document.documentElement.scrollTop ===
     document.documentElement.offsetHeight
@@ -17,18 +15,4 @@ export default function useInfiniteScroll(loadMoreItems) {
       window.removeEventListener('resize', onWindowEvent)
     }
   })
-
-  const page = (pageSize = 10) => ({
-    page: {
-      cursor: pageInfo.cursor || null,
-      pageSize
-    }
-  })
-
-  useEffect(loadMoreItems, [])
-
-  return {
-    setPageInfo,
-    page
-  }
 }
