@@ -1,5 +1,26 @@
 import React, { createContext, useReducer } from 'react'
-import { initialState, mainReducer } from './mainReducer'
+
+import {
+  reducer as eventsReducer,
+  initialState as events
+} from './reducer/events-reducer'
+
+import {
+  reducer as bookingsReducer,
+  initialState as bookings
+} from './reducer/booking-reducer'
+
+const initialState = {
+  events,
+  bookings
+}
+
+const mainReducer = ({ events, bookings }, action) => {
+  return {
+    events: eventsReducer(events, action),
+    bookings: bookingsReducer(bookings, action)
+  }
+}
 
 export const StateContext = createContext()
 

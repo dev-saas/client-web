@@ -9,7 +9,7 @@ import {
   useInfiniteScroll,
   useNotification,
   useAuth,
-  useMutation,
+  useBookings,
   useEvents
 } from '../hooks'
 
@@ -25,20 +25,11 @@ const EventsPage = props => {
   const [creating, setCreating] = useState(false)
   const [selectedEvent, setSelectedEvent] = useState(null)
   const [updating, setUpdating] = useState(null)
+  const { bookEvent, isbookingEvent } = useBookings()
 
   useEffect(() => {
     fetchEvents()
   }, [])
-
-  const [loadingBooking, mutateBooking] = useMutation(`
-mutation BookEvent($id: ID!) {
-  bookEvent(eventId: $id) {
-    _id
-    createdAt
-    updatedAt
-  }
-}
-`)
 
   const [error, setError] = useState()
   const { sendNotification } = useNotification()
@@ -94,7 +85,7 @@ mutation BookEvent($id: ID!) {
 
   const bookEventHandler = async () => {
     try {
-      await mutateBooking({ id: selectedEvent._id })
+      await bookEvent({ id: selectedEvent._id })
       sendNotification(`Event ${selectedEvent.title} booked`)
       setSelectedEvent(null)
     } catch (err) {

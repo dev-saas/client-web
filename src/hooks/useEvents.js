@@ -6,6 +6,10 @@ import {
   useGlobalState
 } from './'
 
+import { types } from '../store/reducer/events-reducer'
+
+const { NEW_EVENT, SET_EVENTS, UPDATE_EVENT } = types
+
 const createEventMutation = `
 mutation ($title: String!, $description: String!, $price: Float!, $date: DateTime!) {
   newEvent: createEvent(eventInput: {title: $title, description: $description, price: $price, date: $date}) {
@@ -102,7 +106,7 @@ export default function useEvents() {
     const { newEvent } = data
 
     dispatch({
-      type: 'NEW_EVENT',
+      type: NEW_EVENT,
       payload: newEvent
     })
   })
@@ -111,7 +115,7 @@ export default function useEvents() {
     const { updatedEvent } = data
 
     dispatch({
-      type: 'UPDATE_EVENT',
+      type: UPDATE_EVENT,
       payload: updatedEvent
     })
   })
@@ -120,7 +124,7 @@ export default function useEvents() {
     const { newEvent } = await CreateEvent(event)
 
     dispatch({
-      type: 'NEW_EVENT',
+      type: NEW_EVENT,
       payload: newEvent
     })
 
@@ -131,7 +135,7 @@ export default function useEvents() {
     const { updatedEvent } = await UpdateEvent({ event })
 
     dispatch({
-      type: 'UPDATE_EVENT',
+      type: UPDATE_EVENT,
       payload: updatedEvent
     })
 
@@ -146,7 +150,7 @@ export default function useEvents() {
     setPageInfo(getEvents.pageInfo)
 
     dispatch({
-      type: 'SET_EVENTS',
+      type: SET_EVENTS,
       payload: getEvents.edges
     })
   }

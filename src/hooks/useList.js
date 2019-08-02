@@ -7,7 +7,7 @@ import {
 } from '../helper/array-utils'
 
 export default function useList(list) {
-  const addArray = newItens => [...list, ...newItens]
+  const set = newItens => [...list, ...newItens]
 
   const add = item => [...list, item]
 
@@ -18,7 +18,7 @@ export default function useList(list) {
   const update = item => updateInArray(list, item)
 
   return {
-    addArray,
+    set,
     remove,
     add,
     get,

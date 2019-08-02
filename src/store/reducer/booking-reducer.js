@@ -1,17 +1,26 @@
 import useList from '../../hooks/useList'
 
-export const initialBookings = { bookings: [] }
+export const initialState = []
 
-export const bookingsReducer = (state, action) => {
-  const { add, addArray, remove } = useList(state)
+export const types = {
+  SET_BOOKINGS: 'SET_BOOKINGS',
+  NEW_BOOKING: 'NEW_BOOKING',
+  REMOVE_BOOKING: 'REMOVE_BOOKING'
+}
+
+export const reducer = (bookings, action) => {
+  const { set, remove } = useList(bookings)
   switch (action.type) {
-    case 'SET_BOOKINGS':
-      return addArray(action.payload)
-    case 'NEW_BOOKING':
-      return add(action.payload)
-    case 'REMOVE_BOOKING':
-      return remove(action.payload._id)
+    case types.SET_BOOKINGS:
+      return set(action.payload)
+
+    case types.NEW_BOOKING:
+      return bookings
+
+    case types.REMOVE_BOOKING:
+      return remove(action.payload)
+
     default:
-      return state
+      return bookings
   }
 }
