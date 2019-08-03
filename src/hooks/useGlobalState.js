@@ -1,5 +1,5 @@
 import { useContext } from 'react'
-import { StateContext } from '../store'
+import { StateContext } from '../reducer'
 
 const useGlobalState = () => useContext(StateContext)
 

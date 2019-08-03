@@ -1,5 +1,4 @@
-import React, { useContext } from 'react'
-import { LoadContext } from '../../context'
+import React from 'react'
 import { useNotification } from '../../hooks'
 import styled from 'styled-components'
 import './loading.css'
@@ -12,7 +11,6 @@ const StyledAlert = styled(Alert)`
 
 const Notification = props => {
   const { notifications, warnings, errors } = useNotification()
-  const { loading } = useContext(LoadContext)
   return (
     <Row className='justify-content-md-center fixed-bottom'>
       <Col sm={12} md={8} lg={6} className='mx-center'>
@@ -41,7 +39,6 @@ const Notification = props => {
           </StyledAlert>
         ))}
       </Col>
-      {loading && <div className='loading' />}
     </Row>
   )
 }

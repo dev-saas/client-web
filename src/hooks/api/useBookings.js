@@ -1,8 +1,14 @@
-import { useMutation, useQuery, useGlobalState, usePagination } from './'
+import { useGlobalState, usePagination } from '..'
+import { useMutation, useQuery } from '../graphql'
 
-import { types } from '../store/reducer/booking-reducer'
+import { types } from '../../reducers/booking-reducer'
 
-const { NEW_BOOKING, REMOVE_BOOKING, SET_BOOKINGS } = types
+const {
+  NEW_BOOKING,
+  REMOVE_BOOKING,
+  SET_BOOKINGS,
+  ADD_MANY_BOOKING
+} = types
 
 const cancelBookingMutation = `
   mutation ($id: ID!) {
@@ -45,10 +51,10 @@ const bookEventMutation = `
 `
 
 export default function useEvents() {
-  const [state, dispatch] = useGlobalState()
-  const [isbookingEvent, BookEvent] = useMutation(bookEventMutation)
-  const [cancelingBook, CancelBook] = useMutation(cancelBookingMutation)
-  const [loadingBookings, FetchBookings] = useQuery(bookingsQuery)
+  const [{ bookings }, dispatch] = useGlobalState()
+  const [BookEvent, isbookingEvent] = useMutation(bookEventMutation)
+  const [CancelBook, cancelingBook] = useMutation(cancelBookingMutation)
+  const [FetchBookings, loadingBookings] = useQuery(bookingsQuery)
   const { page, setPageInfo } = usePagination()
 
   const bookEvent = async event => {
@@ -86,13 +92,27 @@ export default function useEvents() {
     })
   }
 
+  const loadMoreBookings = async () => {
+    const { getBookings } = await FetchBookings(page())
+
+    if (!getBookings.edges[0]) return
+
+    setPageInfo(getBookings.pageInfo)
+
+    dispatch({
+      type: ADD_MANY_BOOKING,
+      payload: getBookings.edges
+    })
+  }
+
   return {
-    bookings: state.bookings,
+    bookings,
     bookEvent,
     fetchBookings,
     loadingBookings,
     isbookingEvent,
     cancelingBook,
-    cancelBooking
+    cancelBooking,
+    loadMoreBookings
   }
 }

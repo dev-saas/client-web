@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-export default function useInfiniteScroll(loadMoreItems) {
+export default function useInfiniteScroll() {
   const [pageInfo, setPageInfo] = useState({})
 
   const page = (pageSize = 10) => ({

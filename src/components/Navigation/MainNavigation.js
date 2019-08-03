@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
 import { Nav } from 'react-bootstrap'
 import { useTranslation } from 'react-i18next'
-import { useAuth, useStyle } from '../../hooks'
+import { useStyle } from '../../hooks'
+import { useAuth } from '../../hooks/api'
 import { THEMES } from '../../styles/styles'
 import Drawer from '@material-ui/core/Drawer'
 import AppBar from '@material-ui/core/AppBar'
@@ -18,7 +19,10 @@ import BrightnessHigh from '@material-ui/icons/InvertColorsOff'
 
 const mainNavigation = props => {
   const { t, i18n } = useTranslation()
-  const { email, logout } = useAuth()
+  const {
+    user: { email, logged },
+    logout
+  } = useAuth()
   const { setTheme, theme, styles } = useStyle()
   const [showDrawer, setShowDrawer] = useState(false)
 
@@ -67,12 +71,12 @@ const mainNavigation = props => {
           <Button style={styles.text2} href='#events' color='inherit'>
             {t('navigation:Events')}
           </Button>
-          {!email && (
+          {!logged && (
             <Button style={styles.text1} href='#auth'>
               {t('navigation:Authenticate')}
             </Button>
           )}
-          {email && (
+          {logged && (
             <React.Fragment>
               <Nav.Link href='#bookings'>
                 {t('navigation:Bookings')}

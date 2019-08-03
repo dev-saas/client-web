@@ -6,12 +6,10 @@ import {
   BookingsControls
 } from '../components/Bookings'
 import { Modal } from '../components'
-import {
-  useInfiniteScroll,
-  useBookings,
-  useList,
-  useNotification
-} from '../hooks'
+import { useInfiniteScroll, useList, useNotification } from '../hooks'
+
+import { useBookings } from '../hooks/api'
+import { ArrayHelper } from '../helper/array-utils'
 
 const BookingsPage = props => {
   const [outputType, setOutputType] = useState('list')
@@ -20,21 +18,24 @@ const BookingsPage = props => {
     loadingBookings,
     fetchBookings,
     cancelBooking,
-    cancelingBook
+    cancelingBook,
+    loadMoreBookings
   } = useBookings()
   const [selectedBooking, setSelectedBooking] = useState(null)
   const [error, setError] = useState()
   const { sendNotification } = useNotification()
-  const { get } = useList(bookings)
+
+  const Bookings = ArrayHelper(bookings)
+
   useEffect(() => {
     fetchBookings()
   }, [])
 
-  useInfiniteScroll(fetchBookings)
+  useInfiniteScroll(loadMoreBookings)
 
   const selectBookingHandler = bookingId => {
     setError()
-    setSelectedBooking(get(bookingId))
+    setSelectedBooking(Bookings.findById(bookingId))
   }
 
   const deleteBookingHandler = async () => {
@@ -62,7 +63,8 @@ const BookingsPage = props => {
           title='Cancel Booking'
           onHide={selectBookingHandler.bind(this, null)}
           onConfirm={deleteBookingHandler}
-          error={error}>
+          error={error}
+          loading={cancelingBook}>
           {selectedBooking.event.title}
         </Modal>
       )}

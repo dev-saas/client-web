@@ -5,13 +5,8 @@ import { Formik, Form } from 'formik'
 import { object, string, number } from 'yup'
 import { Input, TextArea, Action } from '../components/Form'
 import { Button, Card } from 'react-bootstrap'
-import {
-  useInfiniteScroll,
-  useNotification,
-  useAuth,
-  useBookings,
-  useEvents
-} from '../hooks'
+import { useInfiniteScroll, useNotification } from '../hooks'
+import { useBookings, useEvents, useAuth } from '../hooks/api'
 
 const validationEvent = object().shape({
   title: string().required(),
@@ -21,7 +16,15 @@ const validationEvent = object().shape({
 })
 
 const EventsPage = props => {
-  const { events, CreateEvent, UpdateEvent, fetchEvents } = useEvents()
+  const {
+    events,
+    CreateEvent,
+    UpdateEvent,
+    fetchEvents,
+    loadMoreEvents,
+    loadingNewEvent,
+    loadingUpdateEvent
+  } = useEvents()
   const [creating, setCreating] = useState(false)
   const [selectedEvent, setSelectedEvent] = useState(null)
   const [updating, setUpdating] = useState(null)
@@ -33,9 +36,11 @@ const EventsPage = props => {
 
   const [error, setError] = useState()
   const { sendNotification } = useNotification()
-  const { userId } = useAuth()
+  const {
+    user: { logged }
+  } = useAuth()
 
-  useInfiniteScroll(fetchEvents)
+  useInfiniteScroll(loadMoreEvents)
 
   const startCreateEventHandler = () => {
     setError()
@@ -95,7 +100,7 @@ const EventsPage = props => {
 
   return (
     <React.Fragment>
-      <Modal title='Add Event' show={creating}>
+      <Modal title='Add Event' show={creating} loading={loadingNewEvent}>
         <Formik
           initialValues={{
             title: '',
@@ -142,7 +147,10 @@ const EventsPage = props => {
         </Formik>
       </Modal>
       {updating && (
-        <Modal title='Update Event' show={!!updating}>
+        <Modal
+          title='Update Event'
+          show={!!updating}
+          loading={loadingUpdateEvent}>
           <Formik
             initialValues={{
               _id: updating._id,
@@ -195,10 +203,11 @@ const EventsPage = props => {
           show={selectedEvent}
           title={selectedEvent.title}
           onHide={modalCancelHandler}
-          onConfirm={userId && bookEventHandler}
-          cancelText={!userId && 'Close'}
-          confirmText={userId && 'Book'}
-          error={error}>
+          onConfirm={logged && bookEventHandler}
+          cancelText={!logged && 'Close'}
+          confirmText={logged && 'Book'}
+          error={error}
+          loading={isbookingEvent}>
           <h1>{selectedEvent.title}</h1>
           <h2>
             ${selectedEvent.price} -{' '}
@@ -207,7 +216,7 @@ const EventsPage = props => {
           <p>{selectedEvent.description}</p>
         </Modal>
       )}
-      {userId && (
+      {logged && (
         <Card className='text-center'>
           <Card.Body>
             <Card.Title>Share your own Events!</Card.Title>

@@ -2,11 +2,14 @@ import React from 'react'
 
 import './EventItem.css'
 
-import { useAuth, useStyle } from '../../../../hooks'
+import { useStyle } from '../../../../hooks'
+import { useAuth } from '../../../../hooks/api'
 import { Button } from 'react-bootstrap'
 
 const eventItem = ({ event, onEdit, onDetail }) => {
-  const { userId } = useAuth()
+  const {
+    user: { id }
+  } = useAuth()
   const { styles } = useStyle()
 
   return (
@@ -18,7 +21,7 @@ const eventItem = ({ event, onEdit, onDetail }) => {
         </h2>
       </div>
       <div>
-        {userId === event.creator._id ? (
+        {id === event.creator._id ? (
           <Button
             variant='primary'
             onClick={onEdit.bind(this, event._id)}>

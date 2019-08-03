@@ -1,9 +1,10 @@
-import { useContext, useEffect } from 'react'
-import { ApolloContext } from 'react-apollo'
+import { useEffect } from 'react'
+import { useClient } from './'
 import gql from 'graphql-tag'
 
 export default function useSubscription(subscription, next) {
-  const { client } = useContext(ApolloContext)
+  const client = useClient()
+
   useEffect(() => {
     const sub = client
       .subscribe({ query: gql(subscription) })

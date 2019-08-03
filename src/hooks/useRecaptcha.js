@@ -1,17 +1,18 @@
-import { useContext, useRef } from 'react'
-import { AuthContext } from '../context'
+import { useRef, useState } from 'react'
 
 export default function useRecaptcha() {
-  const { recaptcha, setRecaptcha } = useContext(AuthContext)
   const recaptchaRef = useRef()
+  const [recaptcha, setRecaptcha] = useState(false)
 
   const resetRecaptcha = () => {
     recaptchaRef.current.reset()
     setRecaptcha(false)
+    localStorage.removeItem('recaptcha')
   }
 
   const handleRecaptcha = token => {
-    setRecaptcha(token)
+    localStorage.setItem('recaptcha', token)
+    setRecaptcha(true)
   }
 
   return {

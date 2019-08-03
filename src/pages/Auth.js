@@ -3,16 +3,17 @@ import { Formik, Form } from 'formik'
 import { object, string } from 'yup'
 import ReCAPTCHA from 'react-google-recaptcha'
 import { useTranslation } from 'react-i18next'
-import { useAuth, useRecaptcha, useStyle } from '../hooks'
+import { useRecaptcha, useStyle } from '../hooks'
+import { useAuth } from '../hooks/api'
 import TextField from '../components/Form/Input'
 import { Avatar, Button, Typography, Container } from '@material-ui/core'
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined'
-
+import { ButtonLoad } from '../components'
 const AuthPage = () => {
   const [isLogin, setIsLogin] = useState(true)
   const { t } = useTranslation()
   const { styles } = useStyle()
-  const { login, register } = useAuth()
+  const { login, register, loadingLogin, loadingRegister } = useAuth()
   const {
     recaptchaRef,
     resetRecaptcha,
@@ -38,7 +39,7 @@ const AuthPage = () => {
           confirmPassword: string().test(
             'passwords-match',
             t('auth:Passwords must match'),
-            function(value) {
+            function (value) {
               return isLogin || this.parent.password === value
             }
           )
@@ -101,14 +102,20 @@ const AuthPage = () => {
                   style={styles.recaptcha}
                 />
               </div>
-              <Button
+              <ButtonLoad
                 type='submit'
                 fullWidth
                 variant='contained'
                 color='primary'
-                disabled={!recaptcha || !isValid}>
+                disabled={
+                  !recaptcha ||
+                  !isValid ||
+                  loadingLogin ||
+                  loadingRegister
+                }
+                loading={loadingLogin || loadingRegister}>
                 {t(isLogin ? 'auth:Login' : 'auth:Register')}
-              </Button>
+              </ButtonLoad>
               <Button onClick={() => setIsLogin(!isLogin)}>
                 {t(
                   isLogin

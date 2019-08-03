@@ -1,11 +1,10 @@
-import { useContext } from 'react'
-import useLoading from './useLoading'
-import { ApolloContext } from 'react-apollo'
+import { useState } from 'react'
+import { useClient } from './'
 import gql from 'graphql-tag'
 
 export default function useMutation(mutation) {
-  const { loading, setLoading } = useLoading()
-  const { client } = useContext(ApolloContext)
+  const [loading, setLoading] = useState(false)
+  const client = useClient()
 
   const mutate = async variables => {
     try {
@@ -22,5 +21,5 @@ export default function useMutation(mutation) {
     }
   }
 
-  return [loading, mutate]
+  return [mutate, loading]
 }

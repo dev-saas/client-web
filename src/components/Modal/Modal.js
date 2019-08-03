@@ -1,14 +1,16 @@
 import React from 'react'
 import { Action } from '../Form'
 import { Modal } from 'react-bootstrap'
-
-const modal = ({ title, children, ...rest }) => (
+import { Loading } from '../'
+const modal = ({ title, children, loading, ...rest }) => (
   <Modal {...rest} centered>
     <Modal.Header closeButton>
       <Modal.Title>{title}</Modal.Title>
     </Modal.Header>
+    <Loading loading={loading}>
     <Modal.Body>{children}</Modal.Body>
-    <Action {...rest} />
+      <Action {...rest} />
+    </Loading>
   </Modal>
 )
 

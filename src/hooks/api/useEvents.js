@@ -1,14 +1,9 @@
-import {
-  useMutation,
-  useQuery,
-  useSubscription,
-  usePagination,
-  useGlobalState
-} from './'
+import { usePagination, useGlobalState } from '..'
+import { useMutation, useQuery, useSubscription } from '../graphql'
 
-import { types } from '../store/reducer/events-reducer'
+import { types } from '../../reducers/events-reducer'
 
-const { NEW_EVENT, SET_EVENTS, UPDATE_EVENT } = types
+const { NEW_EVENT, SET_EVENTS, UPDATE_EVENT, ADD_MANY_EVENTS } = types
 
 const createEventMutation = `
 mutation ($title: String!, $description: String!, $price: Float!, $date: DateTime!) {
@@ -95,11 +90,11 @@ const updateEventSubscription = `
 
 export default function useEvents() {
   const [{ events }, dispatch] = useGlobalState()
-  const [loadingNewEvent, CreateEvent] = useMutation(createEventMutation)
-  const [loadingUpdateEvent, UpdateEvent] = useMutation(
+  const [CreateEvent, loadingNewEvent] = useMutation(createEventMutation)
+  const [UpdateEvent, loadingUpdateEvent] = useMutation(
     updateEventMutation
   )
-  const [loadingEvents, FetchEvents] = useQuery(eventsQuery)
+  const [FetchEvents, loadingEvents] = useQuery(eventsQuery)
   const { page, setPageInfo } = usePagination()
 
   useSubscription(newEventSubscription, ({ data }) => {
@@ -155,6 +150,19 @@ export default function useEvents() {
     })
   }
 
+  const loadMoreEvents = async () => {
+    const { getEvents } = await FetchEvents(page())
+
+    if (!getEvents.edges[0]) return
+
+    setPageInfo(getEvents.pageInfo)
+
+    dispatch({
+      type: ADD_MANY_EVENTS,
+      payload: getEvents.edges
+    })
+  }
+
   return {
     events,
     CreateEvent: newEvent,
@@ -162,6 +170,7 @@ export default function useEvents() {
     loadingEvents,
     loadingNewEvent,
     UpdateEvent: updateEvent,
-    loadingUpdateEvent
+    loadingUpdateEvent,
+    loadMoreEvents
   }
 }

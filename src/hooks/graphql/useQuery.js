@@ -1,11 +1,10 @@
-import { useContext } from 'react'
-import useLoading from './useLoading'
-import { ApolloContext } from 'react-apollo'
+import { useState } from 'react'
+import { useClient } from './'
 import gql from 'graphql-tag'
 
 export default function useQuery(query) {
-  const { loading, setLoading } = useLoading()
-  const { client } = useContext(ApolloContext)
+  const [loading, setLoading] = useState(false)
+  const client = useClient()
 
   const Query = async variables => {
     try {
@@ -16,11 +15,11 @@ export default function useQuery(query) {
       })
       return data
     } catch (err) {
-      console.log(err)
+      console.log('useQuery', err)
     } finally {
       setLoading(false)
     }
   }
 
-  return [loading, Query]
+  return [Query, loading]
 }

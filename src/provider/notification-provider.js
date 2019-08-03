@@ -1,6 +1,7 @@
-import React, { useState, useContext } from 'react'
+import React, { useState } from 'react'
 import ReactGA from 'react-ga'
-import { NotificationContext, RollbarContext } from '../context'
+import { NotificationContext } from '../context'
+import { useRollbar } from '../hooks'
 
 const _notifications = []
 const _warnings = []
@@ -20,7 +21,7 @@ const NotificationProvider = props => {
   const [warnings, setWarnings] = useState([])
   const [errors, setErrors] = useState([])
 
-  const { logError, logWarning, logInfo } = useContext(RollbarContext)
+  const { logError, logWarning, logInfo } = useRollbar()
 
   const sendNotification = (notification, seconds = 5) => {
     logInfo(notification)
@@ -46,8 +47,7 @@ const NotificationProvider = props => {
         warnings: warnings,
         sendError: sendError,
         errors: errors
-      }}
-    >
+      }}>
       {props.children}
     </NotificationContext.Provider>
   )
