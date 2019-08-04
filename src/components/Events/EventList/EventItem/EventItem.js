@@ -8,7 +8,7 @@ import { Button } from 'react-bootstrap'
 
 const eventItem = ({ event, onEdit, onDetail }) => {
   const {
-    user: { id }
+    user: { uid }
   } = useAuth()
   const { styles } = useStyle()
 
@@ -21,7 +21,7 @@ const eventItem = ({ event, onEdit, onDetail }) => {
         </h2>
       </div>
       <div>
-        {id === event.creator._id ? (
+        {uid === event.creator.uid ? (
           <Button
             variant='primary'
             onClick={onEdit.bind(this, event._id)}>

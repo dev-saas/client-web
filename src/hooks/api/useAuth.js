@@ -1,63 +1,69 @@
 import { useNotification, useGlobalState } from '../'
-import { useQuery, useMutation } from '../graphql'
-import { useTranslation } from 'react-i18next'
+import { useMutation } from '../graphql'
 import { types } from '../../reducers/auth-reducer'
-
-const loginQuery = `
-query ($email: Email!, $password: String!) {
-  token: login(email: $email, password: $password)
-}
-`
+import { useFirebase } from './'
 
 const createMutation = `
-mutation ($email: Email!, $password: String!) {
-  createUser(email: $email, password: $password) {
-    _id
-    email
-  }
+mutation ($token: String!) {
+  register(token: $token)
 }
 `
 
 export default function useAuth () {
   const [{ user }, dispatch] = useGlobalState()
-  const [query, loadingLogin] = useQuery(loginQuery)
-  const [mutate, loadingRegister] = useMutation(createMutation)
-  const { sendNotification, sendError } = useNotification()
-  const { t } = useTranslation()
+  const [mutate, loadingRegisterA] = useMutation(createMutation)
+  const { sendError } = useNotification()
+  const {
+    login: loginFire,
+    loadingLogin,
+    register: registerFire,
+    loadingRegister
+  } = useFirebase()
+
+  const login = async (email, password) => {
+    try {
+      const token = await loginFire(email, password)
+
+      dispatch({
+        type: types.LOGIN,
+        payload: token
+      })
+
+      return true
+    } catch (err) {
+      sendError('Verifique suas credenciais')
+    }
+    return false
+  }
+
+  const register = async (email, password) => {
+    try {
+      const token = await registerFire(email, password)
+      await mutate({ token })
+
+      dispatch({
+        type: types.REGISTER,
+        payload: token
+      })
+    } catch (err) {
+      console.log(err)
+      sendError(err.message)
+    }
+    return false
+  }
+
+  const logout = () => {
+    dispatch({
+      type: types.LOGOUT
+    })
+  }
 
   return {
-    login: async (email, password) => {
-      try {
-        const { token } = await query({ email, password })
-        dispatch({
-          type: types.LOGIN,
-          payload: token
-        })
-        return true
-      } catch (err) {
-        sendError('Verifique suas credenciais')
-      }
-      return false
-    },
-    register: async (email, password) => {
-      try {
-        const { createUser } = await mutate({ email, password })
-        sendNotification(
-          createUser.email + ' ' + t('auth:registered successfully')
-        )
-        return true
-      } catch (err) {
-        console.log(err)
-      }
-      return false
-    },
-    logout: () => {
-      dispatch({
-        type: types.LOGOUT
-      })
-    },
+    login,
+    register,
+    logout,
     user,
     loadingLogin,
-    loadingRegister
+    loadingRegister: loadingRegister || loadingRegisterA
   }
 }

@@ -6,9 +6,6 @@ import { getMainDefinition } from 'apollo-utilities'
 import { setContext } from 'apollo-link-context'
 import { InMemoryCache } from 'apollo-cache-inmemory'
 
-const token = localStorage.getItem('token')
-const recaptcha = localStorage.getItem('recaptcha')
-
 const httpLink = new HttpLink({
   uri: process.env.REACT_APP_GRAPHQL
 })
@@ -30,8 +27,8 @@ const link = split(
 const authLink = setContext((_, { headers }) => ({
   headers: {
     ...headers,
-    authorization: token ? `Bearer ${token}` : '',
-    recaptcha
+    token: localStorage.getItem('token'),
+    recaptcha: localStorage.getItem('recaptcha')
   }
 }))
 

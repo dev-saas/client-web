@@ -14,7 +14,7 @@ mutation ($title: String!, $description: String!, $price: Float!, $date: DateTim
     date
     price
     creator {
-      _id
+      uid
     }
   }
 }
@@ -29,7 +29,7 @@ mutation ($event: UpdateEventInput!) {
     date
     price
     creator {
-      _id
+      uid
     }
   }
 }
@@ -49,7 +49,7 @@ query ($page: PageInput) {
       date
       price
       creator {
-        _id
+        uid
         email
       }
     }
@@ -66,7 +66,7 @@ const newEventSubscription = `
         price
         date
         creator {
-        _id
+          uid
       }
     }
   }
@@ -81,19 +81,16 @@ const updateEventSubscription = `
       price
       date
       creator {
-        _id
-        email
+        uid
       }
     }
   }
 `
 
-export default function useEvents() {
+export default function useEvents () {
   const [{ events }, dispatch] = useGlobalState()
   const [CreateEvent, loadingNewEvent] = useMutation(createEventMutation)
-  const [UpdateEvent, loadingUpdateEvent] = useMutation(
-    updateEventMutation
-  )
+  const [UpdateEvent, loadingUpdateEvent] = useMutation(updateEventMutation)
   const [FetchEvents, loadingEvents] = useQuery(eventsQuery)
   const { page, setPageInfo } = usePagination()
 

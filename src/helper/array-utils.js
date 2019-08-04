@@ -15,7 +15,7 @@ export const addInArray = (array, added) => [...array, ...added]
 export const ArrayHelper = array => {
   const update = updating => {
     const index = array.findIndex(obj => obj._id === updating._id)
-    if (!index) return array
+    if (index === -1) return array
     const newState = [...array]
     newState[index] = updating
     return newState

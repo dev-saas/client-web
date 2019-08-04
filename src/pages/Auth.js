@@ -9,6 +9,7 @@ import TextField from '../components/Form/Input'
 import { Avatar, Button, Typography, Container } from '@material-ui/core'
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined'
 import { ButtonLoad } from '../components'
+
 const AuthPage = () => {
   const [isLogin, setIsLogin] = useState(true)
   const { t } = useTranslation()
@@ -45,10 +46,13 @@ const AuthPage = () => {
           )
         })}
         onSubmit={async ({ email, password }) => {
-          if (isLogin) {
-            if (!(await login(email, password))) resetRecaptcha()
-          } else {
-            setIsLogin(await register(email, password))
+          try {
+            await (isLogin
+              ? login(email, password)
+              : register(email, password))
+          } catch (err) {
+            console.log(err)
+          } finally {
             resetRecaptcha()
           }
         }}
