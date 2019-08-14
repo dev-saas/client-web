@@ -1,26 +1,31 @@
 {
-    "commom": {
-        "Cancel": "Cancel"
-    },
-    "navigation": {
-        "Events": "Events",
-        "Bookings": "Bookings",
-        "Authenticate": "Authenticate",
-        "Logout": "Logout"
-    },
-    "auth": {
-        "Login": "Login",
-        "Signup": "Signup",
-        "Password": "Password",
-        "Enter your email": "Enter your email",
-        "Email": "Email",
-        "Email is required": "Email is required",
-        "Password is required": "Password is required",
-        "Passwords must match": "Passwords must match",
-        "registered successfully": "registered successfully",
-        "Confirm Password": "Confirm Password",
-        "Switch to Login": "Switch to Login",
-        "Dont have an account? Register": "Don't have an account ? Click here",
-        "Already have an account? Login": "Already have an account? Click here"
-    }
+  "commom": {
+    "Cancel": "Cancel"
+  },
+  "navigation": {
+    "Events": "Events",
+    "Bookings": "Bookings",
+    "Authenticate": "Authenticate",
+    "Logout": "Logout"
+  },
+  "auth": {
+    "Login": "Login",
+    "Signup": "Signup",
+    "Password": "Password",
+    "Enter your email": "Enter your email",
+    "Email": "Email",
+    "Email is required": "Email is required",
+    "Password is required": "Password is required",
+    "Passwords must match": "Passwords must match",
+    "registered successfully": "registered successfully",
+    "Confirm Password": "Confirm Password",
+    "Switch to Login": "Switch to Login",
+    "Dont have an account? Register": "Don't have an account ? Click here",
+    "Already have an account? Login": "Already have an account? Click here",
+    "auth/wrong-password": "Wrong password",
+    "auth/user-not-found": "User not found",
+    "auth/email-already-in-use": "Email already cadastred",
+    "auth/weak-password": "Weak password",
+    "Email sent": "Email sent"
+  }
 }

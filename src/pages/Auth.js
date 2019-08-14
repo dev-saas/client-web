@@ -3,27 +3,27 @@ import { Formik, Form } from 'formik'
 import { object, string } from 'yup'
 import ReCAPTCHA from 'react-google-recaptcha'
 import { useTranslation } from 'react-i18next'
-import { useRecaptcha, useStyle } from '../hooks'
-import { useAuth } from '../hooks/api'
-import TextField from '../components/Form/Input'
+import { useSnackbar } from 'notistack'
+import { useRecaptcha } from './hooks'
+import { useAuth } from '../actions'
+import TextField from './components/Form/Input'
 import { Avatar, Button, Typography, Container } from '@material-ui/core'
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined'
-import { ButtonLoad } from '../components'
+import { ButtonLoad, Paper } from './components'
 
-const AuthPage = () => {
+export default function AuthPage () {
   const [isLogin, setIsLogin] = useState(true)
   const { t } = useTranslation()
-  const { styles } = useStyle()
-  const { login, register, loadingLogin, loadingRegister } = useAuth()
+  const { enqueueSnackbar } = useSnackbar()
+  const { login, register, loading, sendResetEmail } = useAuth()
   const {
     recaptchaRef,
     resetRecaptcha,
     handleRecaptcha,
     recaptcha
   } = useRecaptcha()
-
   return (
-    <Container maxWidth='xs'>
+    <Container maxWidth="xs">
       <Formik
         initialValues={{
           email: '',
@@ -51,88 +51,101 @@ const AuthPage = () => {
               ? login(email, password)
               : register(email, password))
           } catch (err) {
-            console.log(err)
+            enqueueSnackbar(t(`auth:${err.code}`), { variant: 'error' })
           } finally {
             resetRecaptcha()
           }
         }}
-        render={({ isValid }) => (
-          <div style={styles.paper}>
-            <Avatar style={styles.avatar}>
+        render={({ isValid, values }) => (
+          <Paper>
+            <Avatar
+              style={{
+                margin: '1px'
+              }}>
               <LockOutlinedIcon />
             </Avatar>
-            <Typography component='h1' variant='h5'>
+            <Typography component="h1" variant="h5">
               {t(isLogin ? 'auth:Login' : 'auth:Register')}
             </Typography>
-            <Form style={styles.form}>
+            <Form>
               <TextField
-                variant='outlined'
-                margin='normal'
-                autoComplete='email'
+                variant="outlined"
+                margin="normal"
+                autoComplete="email"
                 fullWidth
                 label={t('auth:Email')}
                 autoFocus
-                id='email'
-                name='email'
+                id="email"
+                name="email"
               />
               <TextField
-                variant='outlined'
-                margin='normal'
+                variant="outlined"
+                margin="normal"
                 fullWidth
-                name='password'
+                name="password"
                 label={t('auth:Password')}
-                type='password'
-                id='password'
+                type="password"
+                id="password"
                 autoComplete={
                   isLogin ? 'current-password' : 'new-password'
                 }
               />
               {!isLogin && (
                 <TextField
-                  variant='outlined'
-                  margin='normal'
+                  variant="outlined"
+                  margin="normal"
                   fullWidth
-                  name='confirmPassword'
+                  name="confirmPassword"
                   label={t('auth:Confirm Password')}
-                  type='password'
-                  id='confirm-password'
+                  type="password"
+                  id="confirm-password"
                 />
               )}
-              <div style={styles.center}>
+              <div style={{ textAlign: 'center' }}>
                 <ReCAPTCHA
                   ref={recaptchaRef}
                   sitekey={process.env.REACT_APP_RECAPTCHA_SITE_KEY}
                   onChange={handleRecaptcha}
-                  style={styles.recaptcha}
+                  style={{
+                    margin: '14px 37px 19px',
+                    display: 'inline-block'
+                  }}
                 />
               </div>
               <ButtonLoad
-                type='submit'
+                type="submit"
                 fullWidth
-                variant='contained'
-                color='primary'
-                disabled={
-                  !recaptcha ||
-                  !isValid ||
-                  loadingLogin ||
-                  loadingRegister
-                }
-                loading={loadingLogin || loadingRegister}>
+                variant="contained"
+                color="primary"
+                disabled={!recaptcha || !isValid || loading}
+                loading={loading}>
                 {t(isLogin ? 'auth:Login' : 'auth:Register')}
               </ButtonLoad>
-              <Button onClick={() => setIsLogin(!isLogin)}>
+              <Button
+                color="primary"
+                onClick={() => setIsLogin(!isLogin)}>
                 {t(
                   isLogin
                     ? 'auth:Dont have an account? Register'
                     : 'auth:Already have an account? Login'
                 )}
               </Button>
+              <Button
+                color="secondary"
+                onClick={async () => {
+                  try {
+                    await sendResetEmail(values.email)
+                    // sendNotification(t('auth:Email sent'))
+                  } catch (err) {
+                    // sendError(t(`auth:${err.code}`))
+                  }
+                }}>
+                {t('auth:Forgot password')}
+              </Button>
             </Form>
-          </div>
+          </Paper>
         )}
       />
     </Container>
   )
 }
-
-export default AuthPage
