@@ -9,7 +9,7 @@ const updateEventMutation = gql`
       description
       date
       price
-      creator {
+      owner {
         uid
       }
     }

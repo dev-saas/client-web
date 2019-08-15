@@ -3,19 +3,15 @@ import { useMutation } from './'
 
 const cancelBookingMutation = gql`
   mutation($id: ID!) {
-    event: cancelBooking(bookingId: $id) {
-      _id
-      title
-    }
+    cancelBooking(bookingId: $id)
   }
 `
 
 export default function useCreateEvent () {
   const [mutate, loading] = useMutation(cancelBookingMutation)
 
-  async function cancelBooking (id) {
-    const { event } = await mutate({ id })
-    return event
+  function cancelBooking (id) {
+    return mutate({ id })
   }
 
   return [cancelBooking, loading]

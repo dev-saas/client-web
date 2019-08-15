@@ -9,7 +9,7 @@ const updateEventSubscription = gql`
       description
       price
       date
-      creator {
+      owner {
         uid
       }
     }

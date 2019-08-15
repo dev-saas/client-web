@@ -14,7 +14,7 @@ const eventsQuery = gql`
         description
         date
         price
-        creator {
+        owner {
           uid
           email
         }

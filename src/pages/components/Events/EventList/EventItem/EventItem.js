@@ -3,7 +3,7 @@ import './EventItem.css'
 import { useAuth } from '../../../../../actions'
 import { Button } from '@material-ui/core'
 
-const eventItem = ({ event, onEdit, onDetail }) => {
+function eventItem ({ event, onEdit, onDetail }) {
   const {
     user: { uid }
   } = useAuth()
@@ -17,7 +17,7 @@ const eventItem = ({ event, onEdit, onDetail }) => {
         </h2>
       </div>
       <div>
-        {uid === event.creator.uid ? (
+        {uid === event.owner.uid ? (
           <Button variant="primary" onClick={() => onEdit(event._id)}>
             Edit
           </Button>

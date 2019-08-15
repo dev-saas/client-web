@@ -26,7 +26,7 @@ export default function LanguageDropdown () {
         <Language />
       </IconButton>
       <Menu
-        // anchorEl={showMenu}
+        anchorEl={showMenu}
         keepMounted
         open={showMenu}
         onClose={() => setShowMenu(false)}>

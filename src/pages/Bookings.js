@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { useSnackbar } from 'notistack'
 import {
   BookingList,
   BookingsChart,
@@ -19,6 +20,7 @@ export default function BookingsPage () {
   } = useBookings()
   const [selectedBooking, setSelectedBooking] = useState(null)
   const [error, setError] = useState()
+  const { enqueueSnackbar } = useSnackbar()
 
   useInfiniteScroll(loadMoreBookings)
 
@@ -29,8 +31,8 @@ export default function BookingsPage () {
 
   const deleteBookingHandler = async () => {
     try {
-      const event = await cancelBooking(selectedBooking._id)
-      // sendNotification(`Booking ${event.title} canceled`)
+      await cancelBooking(selectedBooking._id)
+      enqueueSnackbar('Event canceled')
       setSelectedBooking(null)
     } catch (err) {
       setError(err.message)

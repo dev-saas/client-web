@@ -23,12 +23,11 @@ export default function useEvents () {
   }
 
   const cancelBooking = async bookingId => {
-    const event = await CancelBook(bookingId)
+    await CancelBook(bookingId)
     dispatch({
       type: types.REMOVE_BOOKING,
       payload: bookingId
     })
-    return event
   }
 
   const fetchBookings = async () => {

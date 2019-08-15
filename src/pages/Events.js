@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Button, Card } from 'react-bootstrap'
 import { Formik, Form } from 'formik'
+import { useSnackbar } from 'notistack'
 import { Modal, EventList } from './components'
 import { object, string, number } from 'yup'
 import { Action } from './components/Form'
@@ -30,6 +31,7 @@ export default function EventsPage () {
   const [selectedEvent, setSelectedEvent] = useState(null)
   const [updating, setUpdating] = useState(null)
   const { bookEvent, isbookingEvent } = useBookings()
+  const { enqueueSnackbar } = useSnackbar()
 
   useEffect(() => {
     fetchEvents()
@@ -51,7 +53,7 @@ export default function EventsPage () {
     try {
       const newEvent = await CreateEvent(values)
       setCreating(false)
-      // sendNotification(`Event ${newEvent.title} created`)
+      enqueueSnackbar(`Event ${newEvent.title} created`)
     } catch (err) {
       setError(err.message)
     } finally {
@@ -63,7 +65,7 @@ export default function EventsPage () {
     try {
       const updatedEvent = await UpdateEvent(event)
       setUpdating(null)
-      // sendNotification(`Event ${updatedEvent.title} updated`)
+      enqueueSnackbar(`Event ${updatedEvent.title} updated`)
     } catch (err) {
       setError(err.message)
     } finally {
@@ -91,7 +93,7 @@ export default function EventsPage () {
   const bookEventHandler = async () => {
     try {
       await bookEvent(selectedEvent._id)
-      // sendNotification(`Event ${selectedEvent.title} booked`)
+      enqueueSnackbar(`Event ${selectedEvent.title} booked`)
       setSelectedEvent(null)
     } catch (err) {
       setError(err.message)
