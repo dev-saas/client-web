@@ -8,6 +8,17 @@ import { Action } from './components/Form'
 import { useInfiniteScroll } from './hooks'
 import { useBookings, useEvents, useAuth } from '../actions'
 import Input from './components/Form/Input'
+import {
+  KeyboardTimePicker,
+  KeyboardDatePicker
+} from '@material-ui/pickers'
+
+import {
+  getHours,
+  getMinutes,
+  setHours,
+  setMinutes
+} from 'date-fns'
 
 const validationEvent = object().shape({
   title: string().required('Titulo obrigatório'),
@@ -49,9 +60,14 @@ export default function EventsPage () {
     setCreating(true)
   }
 
-  const modalConfirmHandler = async (values, { setSubmitting }) => {
+  const modalConfirmHandler = async (
+    { time, ...event },
+    { setSubmitting }
+  ) => {
     try {
-      const newEvent = await CreateEvent(values)
+      event.date = setHours(event.date, getHours(time))
+      event.date = setMinutes(event.date, getMinutes(time))
+      const newEvent = await CreateEvent(event)
       setCreating(false)
       enqueueSnackbar(`Event ${newEvent.title} created`)
     } catch (err) {
@@ -61,8 +77,13 @@ export default function EventsPage () {
     }
   }
 
-  const modalConfirmUpdateHandler = async (event, { setSubmitting }) => {
+  const modalConfirmUpdateHandler = async (
+    { time, ...event },
+    { setSubmitting }
+  ) => {
     try {
+      event.date = setHours(event.date, getHours(time))
+      event.date = setMinutes(event.date, getMinutes(time))
       const updatedEvent = await UpdateEvent(event)
       setUpdating(null)
       enqueueSnackbar(`Event ${updatedEvent.title} updated`)
@@ -107,16 +128,24 @@ export default function EventsPage () {
           initialValues={{
             title: '',
             price: '',
-            date: new Date().toISOString().slice(0, -5),
+            date: Date(),
+            time: Date(),
             description: ''
           }}
           onSubmit={modalConfirmHandler}
           validationSchema={validationEvent}
-          render={() => (
+          render={({ setFieldValue, values }) => (
             <Form id="createForm">
               <Input name="title" label="Title" type="text" />
               <Input name="price" label="Price" type="number" />
-              <Input name="date" label="Date" type="datetime-local" />
+              <KeyboardDatePicker
+                value={values.date}
+                onChange={value => setFieldValue('date', value)}
+              />
+              <KeyboardTimePicker
+                value={values.time}
+                onChange={value => setFieldValue('time', value)}
+              />
               <Input
                 name="description"
                 multiline
@@ -143,16 +172,24 @@ export default function EventsPage () {
               _id: updating._id,
               title: updating.title,
               price: updating.price,
-              date: new Date(updating.date).toISOString().slice(0, -5),
+              date: new Date(updating.date),
+              time: new Date(updating.date),
               description: updating.description
             }}
             onSubmit={modalConfirmUpdateHandler}
             validationSchema={validationEvent}
-            render={() => (
+            render={({ values, setFieldValue }) => (
               <Form id="updateForm">
                 <Input name="title" label="Title" type="text" />
                 <Input name="price" label="Price" type="number" />
-                <Input name="date" label="Date" type="datetime-local" />
+                <KeyboardDatePicker
+                  value={values.date}
+                  onChange={value => setFieldValue('date', value)}
+                />
+                <KeyboardTimePicker
+                  value={values.time}
+                  onChange={value => setFieldValue('time', value)}
+                />
                 <Input
                   name="description"
                   multiline
