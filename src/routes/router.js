@@ -10,7 +10,7 @@ export default function Router () {
   } = useAuth()
 
   return (
-    <BrowserRouter basename={process.env.PUBLIC_URL}>
+    <BrowserRouter>
       <GAListener>
         <Switch>
           {logged && <Redirect from="/auth" to="/" exact />}
