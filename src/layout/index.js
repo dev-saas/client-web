@@ -3,12 +3,8 @@ import { SnackbarProvider } from 'notistack'
 import Router from '../routes/router'
 import { useThemeCreator } from '../actions/store/theme-store'
 import NavBar from './NavBar'
-import Content from './Content'
-import {
-  MuiThemeProvider,
-  createMuiTheme
-} from '@material-ui/core/styles'
-import CssBaseline from '@material-ui/core/CssBaseline'
+import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles'
+import { CssBaseline, Container } from '@material-ui/core'
 
 export default function Layout () {
   const { theme } = useThemeCreator()
@@ -17,9 +13,9 @@ export default function Layout () {
       <CssBaseline />
       <SnackbarProvider maxSnack={3}>
         <NavBar />
-        <Content>
+        <Container maxWidth="md" style={{ marginTop: 100 }}>
           <Router />
-        </Content>
+        </Container>
       </SnackbarProvider>
     </MuiThemeProvider>
   )

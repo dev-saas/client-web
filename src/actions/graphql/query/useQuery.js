@@ -3,6 +3,7 @@ import { useClient, useError } from '../'
 
 export default function useQuery (query) {
   const [loading, setLoading] = useState(false)
+  const [errors, setErrors] = useState([])
   const client = useClient()
   const checkErrors = useError()
 

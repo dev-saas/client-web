@@ -8,16 +8,19 @@ import client from './apollo-client'
 import Layout from './layout'
 import DateFnsUtils from '@date-io/date-fns'
 import { MuiPickersUtilsProvider } from '@material-ui/pickers'
+import { ApolloProvider as ApolloHooksProvider } from '@apollo/react-hooks'
 
 export default function App () {
   return (
     <I18nextProvider i18n={i18n}>
       <ApolloProvider client={client}>
-        <StateProvider>
-          <MuiPickersUtilsProvider utils={DateFnsUtils}>
-            <Layout />
-          </MuiPickersUtilsProvider>
-        </StateProvider>
+        <ApolloHooksProvider client={client}>
+          <StateProvider>
+            <MuiPickersUtilsProvider utils={DateFnsUtils}>
+              <Layout />
+            </MuiPickersUtilsProvider>
+          </StateProvider>
+        </ApolloHooksProvider>
       </ApolloProvider>
     </I18nextProvider>
   )

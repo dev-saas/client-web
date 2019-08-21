@@ -1,17 +1,28 @@
 import React from 'react'
-import { Action } from '../Form'
-import { Modal } from 'react-bootstrap'
-import { Loading } from '../'
-const modal = ({ title, children, loading, ...rest }) => (
-  <Modal {...rest} centered>
-    <Modal.Header closeButton>
-      <Modal.Title>{title}</Modal.Title>
-    </Modal.Header>
-    <Loading loading={loading}>
-      <Modal.Body>{children}</Modal.Body>
-      <Action {...rest} />
-    </Loading>
-  </Modal>
-)
+import { Modal } from '@material-ui/core'
+import { makeStyles } from '@material-ui/core/styles'
+
+const useStyles = makeStyles(theme => ({
+  paper: {
+    backgroundColor: theme.palette.background.paper,
+    boxShadow: theme.shadows[5],
+    padding: theme.spacing(2, 4, 4)
+  }
+}))
+
+const modal = ({ children, ...props }) => {
+  const classes = useStyles()
+  return (
+    <Modal
+      {...props}
+      style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center'
+      }}>
+      <div className={classes.paper}>{children}</div>
+    </Modal>
+  )
+}
 
 export default modal

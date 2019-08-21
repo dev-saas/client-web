@@ -1,11 +1,6 @@
 import React from 'react'
-import {
-  AppBar,
-  Toolbar,
-  Slide,
-  useScrollTrigger
-} from '@material-ui/core'
-import { LanguageDropdown, MenuDrawer, ThemeButton } from './components'
+import { AppBar, Toolbar, Slide, useScrollTrigger } from '@material-ui/core'
+import { LanguageDropdown, MenuDrawer, ThemeButton, SearchBar } from './components'
 
 export default function NavBar () {
   const trigger = useScrollTrigger()
@@ -13,10 +8,13 @@ export default function NavBar () {
   return (
     <Slide direction="down" appear={false} in={!trigger}>
       <AppBar>
-        <Toolbar>
+        <Toolbar style={{ display: 'flex' }}>
           <MenuDrawer />
           <ThemeButton />
           <LanguageDropdown />
+          <div style={{ flexGrow: 1, justifyContent: 'flex-end', display: 'flex' }}>
+            <SearchBar />
+          </div>
         </Toolbar>
       </AppBar>
     </Slide>

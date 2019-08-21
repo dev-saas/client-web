@@ -1,22 +1,25 @@
 import gql from 'graphql-tag'
 import { useMutation } from './'
 
-const createEventMutation = gql`
-  mutation($event: EventInput!) {
-    newEvent: createEvent(eventInput: $event) {
-      _id
-      title
-      description
-      date
-      price
-      owner {
-        uid
+const selectionSet = `_id
+        title
+        description
+        date
+        price
+        owner {
+          uid
+        }`
+
+export default function useCreateEvent (selecationSet) {
+  const createEventMutation = gql`
+    mutation($event: EventInput!) {
+      newEvent: createEvent(eventInput: $event) {
+        ${selectionSet}
       }
     }
-  }
-`
+  `
 
-export default function useCreateEvent () {
+  console.log(createEventMutation)
   const [mutate, loading] = useMutation(createEventMutation)
 
   async function newEvent (event) {

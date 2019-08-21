@@ -1,15 +1,13 @@
 import { getTheme } from '../../themes/styles'
 import { useGlobalState } from '../../reducer'
 
-export const initialState = getTheme(
-  localStorage.getItem('theme') || 'Dark'
-)
+export const theme = getTheme(localStorage.getItem('theme') || 'Dark')
 
 export const types = {
   SET_THEME: 'SET_THEME'
 }
 
-export function reducer (theme, action) {
+export function themeReducer (theme, action) {
   switch (action.type) {
     case types.SET_THEME:
       return getTheme(action.payload)

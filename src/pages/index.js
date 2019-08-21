@@ -1,3 +1,4 @@
-export { default as AuthPage } from './Auth'
-export { default as EventsPage } from './Events'
-export { default as BookingsPage } from './Bookings'
+export { AuthPage } from './AuthPage'
+export { MePage } from './MePage'
+export { PostPage } from './PostPage'
+export { ProfilePage } from './ProfilePage'

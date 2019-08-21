@@ -12,7 +12,19 @@ const httpLink = new HttpLink({
 
 const wsLink = new WebSocketLink({
   uri: process.env.REACT_APP_SUBSCRIPTION,
-  options: { reconnect: true }
+  options: {
+    reconnect: true,
+    connectionParams: async () => {
+      const tokenHeader = localStorage.getItem('token')
+        ? { token: localStorage.getItem('token') }
+        : {}
+      return {
+        headers: {
+          ...tokenHeader
+        }
+      }
+    }
+  }
 })
 
 const link = split(

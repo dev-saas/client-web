@@ -11,11 +11,16 @@ import { Avatar, Button, Typography, Container } from '@material-ui/core'
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined'
 import { ButtonLoad, Paper } from './components'
 
-export default function AuthPage () {
+export function AuthPage () {
   const [isLogin, setIsLogin] = useState(true)
   const { t } = useTranslation()
   const { enqueueSnackbar } = useSnackbar()
-  const { login, register, loading, sendResetEmail } = useAuth()
+  const {
+    login,
+    register,
+    loading: { loadingFire, loadingRegister },
+    sendResetEmail
+  } = useAuth()
   const {
     recaptchaRef,
     resetRecaptcha,
@@ -117,8 +122,8 @@ export default function AuthPage () {
                 fullWidth
                 variant="contained"
                 color="primary"
-                disabled={!recaptcha || !isValid || loading}
-                loading={loading}>
+                disabled={!recaptcha || !isValid || loadingFire || loadingRegister}
+                loading={loadingFire || loadingRegister}>
                 {t(isLogin ? 'auth:Login' : 'auth:Register')}
               </ButtonLoad>
               <Button
