@@ -1,1 +1,3 @@
 /*    /index.html   200
+/:username    /:username
+/p/:post    /p/:post
