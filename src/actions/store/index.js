@@ -1,40 +1,15 @@
-import {
-  reducer as eventsReducer,
-  initialState as events
-} from './event-store'
+import { authReducer, user } from './auth-store'
+import { notificationReducer, notifications } from './notification-store'
+import { themeReducer, theme } from './theme-store'
 
-import {
-  reducer as bookingsReducer,
-  initialState as bookings
-} from './booking-store'
-
-import {
-  reducer as authReducer,
-  initialState as user
-} from './auth-store'
-
-import {
-  reducer as themeReducer,
-  initialState as theme
-} from './theme-store'
-
-const initialState = {
-  events,
-  bookings,
+export const initialState = {
   user,
-  theme
+  theme,
+  notifications
 }
 
-function reducer ({ events, bookings, user, theme }, action) {
-  return {
-    events: eventsReducer(events, action),
-    bookings: bookingsReducer(bookings, action),
-    user: authReducer(user, action),
-    theme: themeReducer(theme, action)
-  }
-}
-
-export default {
-  initialState,
-  reducer
-}
+export const reducer = ({ user, theme, notifications }, action) => ({
+  user: authReducer(user, action),
+  theme: themeReducer(theme, action),
+  notifications: notificationReducer(notifications, action)
+})

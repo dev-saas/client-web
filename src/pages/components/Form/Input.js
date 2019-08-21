@@ -8,7 +8,7 @@ export default function Input ({ name, ...rest }) {
   return (
     <TextField
       {...field}
-      error={touched && error}
+      error={touched && !!error}
       helperText={touched && error}
       name={name}
       {...rest}

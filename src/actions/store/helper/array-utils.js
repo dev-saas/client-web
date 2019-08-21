@@ -11,13 +11,11 @@ export function ArrayHelper (array) {
   const removeById = id => array.filter(object => object._id !== id)
 
   const addMany = added => {
-    const toAdd = added.filter(
-      item => array.map(a => a._id).indexOf(item._id) === -1
-    )
+    const toAdd = added.filter(item => array.map(a => a._id).indexOf(item._id) === -1)
     return [...array, ...toAdd]
   }
 
-  const add = added => (findById(added._id) ? array : [...array, added])
+  const add = added => (findById(added._id) ? array : [added, ...array])
 
   return { update, findById, removeById, addMany, add }
 }

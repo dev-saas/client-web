@@ -17,30 +17,29 @@ export default function MenuDrawer () {
     logout
   } = useAuth()
 
+  const toggleMenu = () => setShowDrawer(!showDrawer)
+
   return (
     <>
-      <IconButton onClick={() => setShowDrawer(true)}>
+      <IconButton onClick={toggleMenu}>
         <MenuIcon />
       </IconButton>
-      <Drawer open={showDrawer} onClick={() => setShowDrawer(false)}>
-        <Typography variant="h6">{email}</Typography>
-        <Button href="#events" color="inherit">
-          {t('navigation:Events')}
+      <Drawer open={showDrawer} onClick={toggleMenu}>
+        {logged && (
+          <Button href="/" color="inherit">
+            <Typography variant="h6">{email}</Typography>
+          </Button>
+        )}
+        <Button href="feed" color="inherit">
+          {t('navigation:Feed')}
         </Button>
         {!logged && (
-          <Button href="#auth">{t('navigation:Authenticate')}</Button>
+          <Button href="/auth">{t('navigation:Authenticate')}</Button>
         )}
         {logged && (
-          <>
-            <Button href="#bookings" color="inherit">
-              {t('navigation:Bookings')}
-            </Button>
-            <div id="logout">
-              <Button id="logout" onClick={logout}>
-                {t('navigation:Logout')}
-              </Button>
-            </div>
-          </>
+          <Button id="logout" onClick={logout}>
+            {t('navigation:Logout')}
+          </Button>
         )}
       </Drawer>
     </>

@@ -1,11 +1,11 @@
-import { useAuthCreator } from '../../actions/store/auth-store'
+import { useAuthStore } from '../../actions/store/auth-store'
 
 const codes = {
   UNAUTHENTICATED: 'UNAUTHENTICATED'
 }
 
 export function useError () {
-  const { logout } = useAuthCreator()
+  const { logout } = useAuthStore()
 
   function checkErrors (errors) {
     if (errors) {

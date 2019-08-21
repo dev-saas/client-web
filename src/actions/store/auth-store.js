@@ -1,6 +1,7 @@
 import decode from 'jwt-decode'
 import { useGlobalState } from '../../reducer'
-export const initialState = getUser(localStorage.getItem('token'))
+
+export const user = getUser(localStorage.getItem('token'))
 
 export const types = {
   LOGIN: 'LOGIN',
@@ -8,7 +9,7 @@ export const types = {
   REGISTER: 'REGISTER'
 }
 
-export function reducer (user, action) {
+export function authReducer (user, action) {
   switch (action.type) {
     case types.LOGIN:
     case types.REGISTER:
@@ -24,30 +25,29 @@ export function reducer (user, action) {
   }
 }
 
-export function useAuthCreator () {
-  const [state, dispatch] = useGlobalState()
+export function useAuthStore () {
+  const [{ user }, dispatch] = useGlobalState()
 
-  function login (token) {
-    dispatch({
-      type: types.LOGIN,
-      payload: token
-    })
+  return {
+    user,
+
+    login: token =>
+      dispatch({
+        type: types.LOGIN,
+        payload: token
+      }),
+
+    register: token =>
+      dispatch({
+        type: types.REGISTER,
+        payload: token
+      }),
+
+    logout: () =>
+      dispatch({
+        type: types.LOGOUT
+      })
   }
-
-  function register (token) {
-    dispatch({
-      type: types.REGISTER,
-      payload: token
-    })
-  }
-
-  function logout () {
-    dispatch({
-      type: types.LOGOUT
-    })
-  }
-
-  return { login, register, logout }
 }
 
 function getUser (token) {

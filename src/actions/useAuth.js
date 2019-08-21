@@ -1,10 +1,9 @@
-import { useGlobalState } from '../reducer'
 import { useFirebase } from '../services'
 import { useRegisterMutation } from './graphql/mutation'
-import { types } from './store/auth-store'
+import { useAuthStore } from './store/auth-store'
 
 export default function useAuth () {
-  const [{ user }, dispatch] = useGlobalState()
+  const { user, login, logout, register } = useAuthStore()
 
   const [mutate, loadingRegister] = useRegisterMutation()
 
@@ -15,37 +14,24 @@ export default function useAuth () {
     forgotPassword
   } = useFirebase()
 
-  const login = async (email, password) => {
-    const token = await loginFire(email, password)
-    dispatch({
-      type: types.LOGIN,
-      payload: token
-    })
-  }
-
-  const register = async (email, password) => {
-    const token = await registerFire(email, password)
-    await mutate(token)
-    dispatch({
-      type: types.REGISTER,
-      payload: token
-    })
-  }
-
-  const logout = () => {
-    dispatch({
-      type: types.LOGOUT
-    })
-  }
-
-  const sendResetEmail = email => forgotPassword(email)
-
   return {
-    login,
-    register,
-    loading: loadingFire || loadingRegister,
-    sendResetEmail,
+    login: async (email, password) => {
+      const token = await loginFire(email, password)
+      login(token)
+    },
+
+    register: async (email, password) => {
+      const token = await registerFire(email, password)
+      await mutate(token)
+      register(token)
+    },
+
+    sendResetEmail: email => forgotPassword(email),
+
     user,
+
+    loading: { loadingFire, loadingRegister },
+
     logout
   }
 }

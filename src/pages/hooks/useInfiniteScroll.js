@@ -1,18 +1,13 @@
-import { useEffect } from 'react'
+import debounce from 'debounce'
 
 export default function useInfiniteScroll (loadMoreItems) {
   const shouldLoadMoreItems = () =>
     window.innerHeight + document.documentElement.scrollTop ===
     document.documentElement.offsetHeight
 
-  const onWindowEvent = () => shouldLoadMoreItems() && loadMoreItems()
+  const onWindowEvent = () => debounce(shouldLoadMoreItems() && loadMoreItems(), 200)
 
-  useEffect(() => {
-    window.addEventListener('scroll', onWindowEvent)
-    window.addEventListener('resize', onWindowEvent)
-    return () => {
-      window.removeEventListener('scroll', onWindowEvent)
-      window.removeEventListener('resize', onWindowEvent)
-    }
-  })
+  window.onscroll = () => onWindowEvent()
+
+  window.onresize = () => onWindowEvent()
 }

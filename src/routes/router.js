@@ -1,7 +1,7 @@
 import React from 'react'
-import { Route, Redirect, Switch, HashRouter } from 'react-router-dom'
+import { Route, Redirect, Switch, BrowserRouter } from 'react-router-dom'
 import { useAuth } from '../actions'
-import { AuthPage, BookingsPage, EventsPage } from '../pages'
+import { AuthPage, MePage, PostPage, ProfilePage } from '../pages'
 import GAListener from './GAListener'
 
 export default function Router () {
@@ -10,17 +10,18 @@ export default function Router () {
   } = useAuth()
 
   return (
-    <HashRouter>
+    <BrowserRouter>
       <GAListener>
         <Switch>
-          {logged && <Redirect from="/" to="/events" exact />}
-          {logged && <Redirect from="/auth" to="/events" exact />}
+          {logged && <Redirect from="/auth" to="/" exact />}
           {!logged && <Route path="/auth" component={AuthPage} />}
-          <Route path="/events" component={EventsPage} />
-          {logged && <Route path="/bookings" component={BookingsPage} />}
-          {!logged && <Redirect to="/auth" exact />}
+          <Route path="/p/:id" component={PostPage} />
+          <Route path="/feed" component={MePage} />
+          <Route path="/:username" component={ProfilePage} />
+          {logged && <Route path="/" component={MePage} />}
+          {!logged && <Redirect to="/feed" exact />}
         </Switch>
       </GAListener>
-    </HashRouter>
+    </BrowserRouter>
   )
 }
