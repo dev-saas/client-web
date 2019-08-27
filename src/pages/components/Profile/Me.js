@@ -1,6 +1,7 @@
 import React from 'react'
 import gql from 'graphql-tag'
 import { useQuery } from '@apollo/react-hooks'
+import { PostList } from '../Post/PostList'
 
 const query = gql`
   query {
@@ -22,5 +23,5 @@ export function Me () {
 
   let { me } = data
 
-  return <div>{me.username}</div>
+  return <div>{me.username}<PostList username={me.username} owner={true}/></div>
 }

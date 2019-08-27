@@ -2,7 +2,7 @@ import React from 'react'
 import { AppBar, Toolbar, Slide, useScrollTrigger } from '@material-ui/core'
 import { LanguageDropdown, MenuDrawer, ThemeButton, SearchBar } from './components'
 
-export default function NavBar () {
+export function NavBar () {
   const trigger = useScrollTrigger()
 
   return (

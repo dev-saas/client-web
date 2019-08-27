@@ -1,10 +1,11 @@
 import React from 'react'
-import { useThemeCreator } from '../../actions/store/theme-store'
+import { useThemeStore } from '../../store'
 import { IconButton } from '@material-ui/core'
 import { InvertColors, InvertColorsOff } from '@material-ui/icons'
 import { THEMES } from '../../themes/styles'
-export default function themeButton () {
-  const { setTheme } = useThemeCreator()
+
+export function ThemeButton () {
+  const { setTheme } = useThemeStore()
 
   function ThemeButton ({ theme }) {
     return (

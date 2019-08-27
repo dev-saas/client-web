@@ -1,4 +1,5 @@
-export { default as LanguageDropdown } from './language-dropdown'
-export { default as MenuDrawer } from './menu-drawer'
-export { default as ThemeButton } from './theme-button'
+export { LanguageDropdown } from './language-dropdown'
+export { MenuDrawer } from './menu-drawer'
+export { ThemeButton } from './theme-button'
+export { UserSearch } from './user-search'
 export { SearchBar } from './search-bar'

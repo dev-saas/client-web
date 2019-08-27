@@ -25,4 +25,4 @@ const modal = ({ children, ...props }) => {
   )
 }
 
-export default modal
+export { modal as Modal }

@@ -1,1 +1,1 @@
-export { default as Action } from './Action/Action'
+export { Input } from './Input'

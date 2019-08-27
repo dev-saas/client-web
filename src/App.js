@@ -4,18 +4,19 @@ import { ApolloProvider } from 'react-apollo'
 import 'typeface-roboto'
 import i18n from './i18n'
 import { StateProvider } from './reducer'
-import client from './apollo-client'
-import Layout from './layout'
+import { store } from './store'
+import { client } from './apollo-client'
+import { Layout } from './layout'
 import DateFnsUtils from '@date-io/date-fns'
 import { MuiPickersUtilsProvider } from '@material-ui/pickers'
 import { ApolloProvider as ApolloHooksProvider } from '@apollo/react-hooks'
 
-export default function App () {
+export function App () {
   return (
     <I18nextProvider i18n={i18n}>
       <ApolloProvider client={client}>
         <ApolloHooksProvider client={client}>
-          <StateProvider>
+          <StateProvider store={store}>
             <MuiPickersUtilsProvider utils={DateFnsUtils}>
               <Layout />
             </MuiPickersUtilsProvider>

@@ -6,11 +6,12 @@ export function usePostsContainer (username, query) {
     variables: { username }
   })
 
-  const [posts, updatePosts, cursor] = usePagination(
+  const [posts, updatePosts, cursor, hasNextPage] = usePagination(
     data && data.user && data.user.posts
   )
 
   function FetchMore () {
+    if (!hasNextPage) return
     fetchMore({
       variables: { page: { cursor }, username },
       updateQuery: (_, { fetchMoreResult }) =>

@@ -1,6 +1,6 @@
 import debounce from 'debounce'
 
-export default function useInfiniteScroll (loadMoreItems) {
+export function useInfiniteScroll (loadMoreItems) {
   const shouldLoadMoreItems = () =>
     window.innerHeight + document.documentElement.scrollTop ===
     document.documentElement.offsetHeight

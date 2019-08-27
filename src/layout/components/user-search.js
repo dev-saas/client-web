@@ -6,10 +6,9 @@ import { Input } from '@material-ui/core'
 const query = gql`
   query($username: Username!, $page: PageInput) {
     users(username: $username, page: $page) {
-      pageInfo {
-        cursor
-      }
-      edges {
+      cursor
+      hasNextPage
+      nodes {
         uid
         username
       }

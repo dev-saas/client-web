@@ -1,13 +1,13 @@
 import React from 'react'
 import { Route, Redirect, Switch, BrowserRouter } from 'react-router-dom'
-import { useAuth } from '../actions'
+import { useAuthStore } from '../store'
 import { AuthPage, MePage, PostPage, ProfilePage } from '../pages'
-import GAListener from './GAListener'
+import { GAListener } from './GAListener'
 
-export default function Router () {
+export function Router () {
   const {
     user: { logged }
-  } = useAuth()
+  } = useAuthStore()
 
   return (
     <BrowserRouter>

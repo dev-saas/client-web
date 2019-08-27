@@ -7,4 +7,4 @@ const Paper = styled.div`
   align-items: center;
 `
 
-export default Paper
+export { Paper }

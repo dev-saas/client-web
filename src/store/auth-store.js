@@ -1,9 +1,9 @@
 import decode from 'jwt-decode'
-import { useGlobalState } from '../../reducer'
+import { useGlobalState } from '../reducer'
 
 export const user = getUser(localStorage.getItem('token'))
 
-export const types = {
+const types = {
   LOGIN: 'LOGIN',
   LOGOUT: 'LOGOUT',
   REGISTER: 'REGISTER'
@@ -54,7 +54,11 @@ function getUser (token) {
   try {
     // eslint-disable-next-line camelcase
     const { user_id, email } = decode(token)
-    return { uid: user_id, email, logged: true }
+    return {
+      uid: user_id,
+      email,
+      logged: true
+    }
   } catch (err) {
     return {
       uid: null,

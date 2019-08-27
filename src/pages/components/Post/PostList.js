@@ -4,14 +4,15 @@ import { usePostsContainer } from '../../containers/posts-container'
 import { useInfiniteScroll } from '../../hooks'
 import { formatDistanceToNow } from 'date-fns'
 
+import { Link, Typography, Paper } from '@material-ui/core'
+
 const query = gql`
   query($username: Username!, $page: PageInput) {
     user(username: $username) {
       posts(page: $page) {
-        pageInfo {
-          cursor
-        }
-        edges {
+        cursor
+        hasNextPage
+        nodes {
           _id
           message
           createdAt
@@ -22,7 +23,7 @@ const query = gql`
   }
 `
 
-export function PostList ({ username }) {
+export function PostList ({ username, owner = false }) {
   const [posts, error, loading, fetchMore] = usePostsContainer(username, query)
 
   useInfiniteScroll(fetchMore)
@@ -31,16 +32,40 @@ export function PostList ({ username }) {
 
   if (error) return <div>{error.message}</div>
 
-  return (
-    <div>
-      {posts.map(post => (
-        <div key={post._id} style={{ marginBottom: 70 }}>
-          <a href={`/p/${post._id}/`}>
-            ({formatDistanceToNow(new Date(post.createdAt))} ago) {post.message}
-          </a>
+  return posts.map(post => (
+    <Paper
+      key={post._id}
+      style={{
+        marginBottom: 15,
+        // paddingBottom: 30,
+        // paddingTop: 30,
+        // paddingLeft: 15,
+        // paddingRight: 30,
+        flexGrow: 1,
+        padding: 50
+      }}
+    >
+      <div style={{ display: 'flex', flexDirection: 'row', position: 'relative' }}>
+        <div style={{ flexDirection: 'column' }}>
+          <Typography
+            variant="h6"
+            style={{
+              flexGrow: 1,
+              alignItems: 'center',
+              marginLeft: 10
+            }}
+          >
+            <Link href={`/p/${post._id}`}>{post.message}</Link>
+          </Typography>
         </div>
-      ))}
-      <button onClick={fetchMore}>load more</button>
-    </div>
-  )
+        <Typography
+          variant="h7"
+          style={{ position: 'absolute', bottom: -30, right: -30 }}
+        >
+          {formatDistanceToNow(new Date(post.createdAt))} ago
+        </Typography>
+        {owner && 'edit'}
+      </div>
+    </Paper>
+  ))
 }

@@ -8,7 +8,7 @@ const useStyles = makeStyles({
   }
 })
 
-export default function SimpleCard ({ children }) {
+export function SimpleCard ({ children }) {
   const classes = useStyles()
 
   return <Card className={classes.card}>{children}</Card>

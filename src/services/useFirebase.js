@@ -12,7 +12,7 @@ firebase.initializeApp({
 
 firebase.auth().languageCode = 'pt-BR'
 
-export default function useFirebase () {
+export function useFirebase () {
   const [loading, setLoading] = useState(false)
 
   async function register (email, password) {

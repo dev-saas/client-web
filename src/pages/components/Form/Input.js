@@ -2,7 +2,7 @@ import React from 'react'
 import { useField } from 'formik'
 import { TextField } from '@material-ui/core'
 
-export default function Input ({ name, ...rest }) {
+export function Input ({ name, ...rest }) {
   const [field, meta] = useField(name)
   const { error, touched } = meta
   return (

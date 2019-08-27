@@ -5,7 +5,7 @@ import { usePagination } from '../hooks'
 export function useUsersContainer (username, query) {
   const [execute, { data, error, loading, fetchMore }] = useLazyQuery(query)
 
-  const [users, updateUsers, cursor] = usePagination(data && data.users)
+  const [users, updateUsers, cursor, hasNextPage] = usePagination(data && data.users)
 
   useEffect(
     () => {
@@ -18,6 +18,7 @@ export function useUsersContainer (username, query) {
   )
 
   function FetchMore () {
+    if (!hasNextPage) return
     fetchMore({
       variables: { page: { cursor }, username },
       updateQuery: (_, { fetchMoreResult }) => updateUsers(fetchMoreResult.users)

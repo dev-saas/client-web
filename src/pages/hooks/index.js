@@ -1,3 +1,4 @@
-export { default as useInfiniteScroll } from './useInfiniteScroll'
-export { default as useRecaptcha } from './useRecaptcha'
-export { default as usePagination } from './usePagination'
+export { useInfiniteScroll } from './useInfiniteScroll'
+export { useRecaptcha } from './useRecaptcha'
+export { useAuth } from './useAuth'
+export { usePagination } from './usePagination'

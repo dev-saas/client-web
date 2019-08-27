@@ -3,7 +3,7 @@ import { IconButton, Menu, MenuItem } from '@material-ui/core'
 import { Language } from '@material-ui/icons'
 import { useTranslation } from 'react-i18next'
 
-export default function LanguageDropdown () {
+export function LanguageDropdown () {
   const [showMenu, setShowMenu] = useState(false)
   const { i18n } = useTranslation()
 
