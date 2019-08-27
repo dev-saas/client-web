@@ -1,9 +1,9 @@
-import { getTheme } from '../../themes/styles'
-import { useGlobalState } from '../../reducer'
+import { getTheme } from '../themes/styles'
+import { useGlobalState } from '../reducer'
 
 export const theme = getTheme(localStorage.getItem('theme') || 'Dark')
 
-export const types = {
+const types = {
   SET_THEME: 'SET_THEME'
 }
 
@@ -17,7 +17,7 @@ export function themeReducer (theme, action) {
   }
 }
 
-export function useThemeCreator () {
+export function useThemeStore () {
   const [{ theme }, dispatch] = useGlobalState()
 
   function setTheme (theme) {

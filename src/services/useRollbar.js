@@ -10,7 +10,7 @@ const rollbar = new Rollbar({
   enabled: process.env.NODE_ENV === 'production'
 })
 
-export default function useRollbar () {
+export function useRollbar () {
   const logDebug = debug => {
     rollbar.debug(debug)
   }

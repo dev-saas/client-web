@@ -1,3 +1,3 @@
-export { default as Modal } from './Modal/Modal'
-export { default as ButtonLoad } from './Loading/ButtonLoad'
-export { default as Paper } from './Paper'
+export { Modal } from './Modal/Modal'
+export { ButtonLoad } from './Loading/ButtonLoad'
+export { Paper } from './Paper'

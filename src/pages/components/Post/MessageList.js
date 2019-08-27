@@ -3,22 +3,20 @@ import gql from 'graphql-tag'
 import { useMessagesContainer } from '../../containers/messages-container'
 import { useInfiniteScroll } from '../../hooks'
 import { formatDistanceToNow } from 'date-fns'
-
 import { Avatar, Typography, Paper } from '@material-ui/core'
 
 const query = gql`
   query($id: ID!, $page: PageInput) {
     post(id: $id) {
       comments(page: $page) {
-        pageInfo {
-          cursor
-        }
-        edges {
+        cursor
+        hasNextPage
+        nodes {
           _id
           owner {
             username
           }
-          comment
+          message
           createdAt
           updatedAt
         }
@@ -34,7 +32,7 @@ const subscription = gql`
       owner {
         username
       }
-      comment
+      message
       createdAt
       updatedAt
     }
@@ -59,10 +57,6 @@ export function MessageList ({ id }) {
       key={comment._id}
       style={{
         marginBottom: 15,
-        // paddingBottom: 30,
-        // paddingTop: 30,
-        // paddingLeft: 15,
-        // paddingRight: 30,
         flexGrow: 1,
         padding: 50
       }}
@@ -78,12 +72,12 @@ export function MessageList ({ id }) {
               marginLeft: 10
             }}
           >
-            {comment.comment}
+            {comment.message}
           </Typography>
         </div>
         <Typography
           variant="h7"
-          style={{ position: 'absolute', bottom: -15, right: -30 }}
+          style={{ position: 'absolute', bottom: -30, right: -30 }}
         >
           {formatDistanceToNow(new Date(comment.createdAt))} ago
         </Typography>

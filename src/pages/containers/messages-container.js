@@ -7,7 +7,7 @@ export function useMessagesContainer (id, query, subscription) {
     variables: { id }
   })
 
-  const [messages, updateMessages, cursor] = usePagination(
+  const [messages, updateMessages, cursor, hasNextPage, addOne] = usePagination(
     data && data.post && data.post.comments
   )
 
@@ -17,12 +17,13 @@ export function useMessagesContainer (id, query, subscription) {
     () => {
       let { data: d, loading, error } = response
       if (error || loading || !d) return
-      updateMessages(d.newComment)
+      addOne(d.newComment)
     },
     [response]
   )
 
   function FetchMore () {
+    if (!hasNextPage) return
     fetchMore({
       variables: { page: { cursor }, id },
       updateQuery: (_, { fetchMoreResult }) =>

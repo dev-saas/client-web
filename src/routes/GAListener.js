@@ -18,4 +18,6 @@ function GAListener ({ children, history }) {
   return children
 }
 
-export default withRouter(GAListener)
+const gaListener = withRouter(GAListener)
+
+export { gaListener as GAListener }

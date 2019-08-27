@@ -1,29 +1,32 @@
 import { useState, useEffect } from 'react'
-import { ArrayHelper } from '../../actions/store/helper/array-utils'
+import { ArrayHelper } from '../../store/helper/array-utils'
 
-export default function usePagination (connection) {
+export function usePagination (connection) {
   const [list, setList] = useState([])
   const [cursor, setCursor] = useState()
+  const [hasNextPage, setHasNextPage] = useState(true)
 
   useEffect(
     () => {
       if (!connection) return
-      let { edges, pageInfo } = connection
-      setList(edges)
-      if (edges[0]) setCursor(pageInfo.cursor)
+      let { nodes, cursor, hasNextPage } = connection
+      setList(nodes)
+      setHasNextPage(hasNextPage)
+      setCursor(cursor)
     },
     [connection]
   )
 
-  function update (connection) {
-    if (!connection.pageInfo) {
-      setList(ArrayHelper(list).add(connection))
-      return
-    }
-    let { edges, pageInfo } = connection
-    setList(ArrayHelper(list).addMany(edges))
-    if (edges[0]) setCursor(pageInfo.cursor)
+  function addOne (node) {
+    setList(ArrayHelper(list).add(node))
   }
 
-  return [list, update, cursor]
+  function update (connection) {
+    let { nodes, cursor, hasNextPage } = connection
+    setHasNextPage(hasNextPage)
+    setList(ArrayHelper(list).addMany(nodes))
+    setCursor(cursor)
+  }
+
+  return [list, update, cursor, hasNextPage, addOne]
 }

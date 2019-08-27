@@ -1,9 +1,9 @@
 import { ArrayHelper } from './helper/array-utils'
-import { useGlobalState } from '../../reducer'
+import { useGlobalState } from '../reducer'
 
 export const notifications = []
 
-export const types = {
+const types = {
   SET_NOTIFICATIONS: 'SET_NOTIFICATIONS',
   NEW_NOTIFICATION: 'NEW_NOTIFICATION',
   REMOVE_NOTIFICATION: 'REMOVE_NOTIFICATION',

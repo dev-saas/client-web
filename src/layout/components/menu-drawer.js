@@ -7,15 +7,15 @@ import {
 } from '@material-ui/core'
 import { Menu as MenuIcon } from '@material-ui/icons'
 import { useTranslation } from 'react-i18next'
-import { useAuth } from '../../actions'
+import { useAuthStore } from '../../store'
 
-export default function MenuDrawer () {
+export function MenuDrawer () {
   const [showDrawer, setShowDrawer] = useState(false)
   const { t } = useTranslation()
   const {
     user: { email, logged },
     logout
-  } = useAuth()
+  } = useAuthStore()
 
   const toggleMenu = () => setShowDrawer(!showDrawer)
 

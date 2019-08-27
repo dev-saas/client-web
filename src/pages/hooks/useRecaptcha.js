@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react'
 
-export default function useRecaptcha () {
+export function useRecaptcha () {
   const recaptchaRef = useRef()
   const [recaptcha, setRecaptcha] = useState(false)
 
