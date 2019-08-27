@@ -25,7 +25,7 @@ export function useMessagesContainer (id, query, subscription) {
   function FetchMore () {
     if (!hasNextPage) return
     fetchMore({
-      variables: { page: { cursor }, id },
+      variables: { page: { cursor, size: 10 }, id },
       updateQuery: (_, { fetchMoreResult }) =>
         updateMessages(fetchMoreResult.post.comments)
     })
