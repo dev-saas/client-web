@@ -19,9 +19,7 @@ const wsLink = new WebSocketLink({
         ? { token: localStorage.getItem('token') }
         : {}
       return {
-        headers: {
-          ...tokenHeader
-        }
+        ...tokenHeader
       }
     }
   }
