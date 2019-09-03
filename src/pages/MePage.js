@@ -1,9 +1,10 @@
 import React from 'react'
-import { Me } from './components/Profile/Me'
+import { Me, NewPost } from './components/Profile'
 
 export function MePage () {
   return (
     <>
+      <NewPost/>
       <Me />
     </>
   )

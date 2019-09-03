@@ -23,5 +23,9 @@ export function Me () {
 
   let { me } = data
 
-  return <div>{me.username}<PostList username={me.username} owner={true}/></div>
+  return (
+    <div>
+      {me.username}<PostList username={me.username} owner={true}/>
+    </div>
+  )
 }
