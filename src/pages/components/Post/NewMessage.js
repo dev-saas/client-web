@@ -35,8 +35,9 @@ export function NewMessage ({ id }) {
           .required('required')
           .max(256, 'max len')
       })}
-      onSubmit={({ message }) => {
-        sendMessage({ variables: { message, post: id } })
+      onSubmit={async ({ message }, { resetForm }) => {
+        await sendMessage({ variables: { message, post: id } })
+        resetForm()
       }}
       render={() =>
         <Form>
