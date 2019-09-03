@@ -1,13 +1,25 @@
-import { useQuery } from '@apollo/react-hooks'
+import { useEffect } from 'react'
+import { useQuery, useSubscription } from '@apollo/react-hooks'
 import { usePagination } from '../hooks'
 
-export function usePostsContainer (username, query) {
+export function usePostsContainer (username, query, subscription) {
   const { data, error, loading, fetchMore } = useQuery(query, {
     variables: { username }
   })
 
-  const [posts, updatePosts, cursor, hasNextPage] = usePagination(
+  const [posts, updatePosts, cursor, hasNextPage, addOne] = usePagination(
     data && data.user && data.user.posts
+  )
+
+  const response = useSubscription(subscription, { variables: { uid: data && data.user && data.user.uid } })
+
+  useEffect(
+    () => {
+      let { data: d, loading, error } = response
+      if (error || loading || !d) return
+      addOne(d.newPost)
+    },
+    [response]
   )
 
   function FetchMore () {

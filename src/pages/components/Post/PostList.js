@@ -9,6 +9,7 @@ import { Link, Typography, Paper } from '@material-ui/core'
 const query = gql`
   query($username: Username!, $page: PageInput) {
     user(username: $username) {
+      uid
       posts(page: $page) {
         cursor
         hasNextPage
@@ -23,8 +24,19 @@ const query = gql`
   }
 `
 
+const subscription = gql`
+  subscription($uid: ID!) {
+    newPost(uid: $uid) {
+      _id
+      message
+      createdAt
+      updatedAt
+    }
+  }
+`
+
 export function PostList ({ username, owner = false }) {
-  const [posts, error, loading, fetchMore] = usePostsContainer(username, query)
+  const [posts, error, loading, fetchMore] = usePostsContainer(username, query, subscription)
 
   useInfiniteScroll(fetchMore)
 
